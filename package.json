@@ -1,0 +1,49 @@
+{
+  "name": "hypostyle",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/hypostyle.js",
+  "source": "index.js",
+  "exports": "./dist/hypostyle.modern.js",
+  "module": "./dist/hypostyle.module.js",
+  "unpkg": "./dist/hypostyle.umd.js",
+  "scripts": {
+    "test": "node -r esm test",
+    "test:watch": "nodemon -r esm test",
+    "format": "prettier-standard --format",
+    "lint": "prettier-standard --lint",
+    "build": "microbundle build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "prettier-standard --lint && prettier-standard --format --staged && npm run test",
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sure-thing/hyposcript.git"
+  },
+  "author": "estrattonbailey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sure-thing/hyposcript/issues"
+  },
+  "homepage": "https://github.com/sure-thing/hyposcript#readme",
+  "devDependencies": {
+    "baretest": "^2.0.0",
+    "commitizen": "^4.2.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "esm": "^3.2.25",
+    "husky": "^4.2.5",
+    "microbundle": "^0.12.4",
+    "nodemon": "^2.0.4",
+    "prettier-standard": "^16.4.1",
+    "semantic-release": "^17.2.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
