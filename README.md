@@ -14,9 +14,9 @@ npm i hypostyle
 #### Example
 
 ```javascript
-import { hyposcript } from 'hyposcript'
+import { hypostyle } from 'hypostyle'
 
-const styles = hyposcript(
+const styles = hypostyle(
   {
     c: 'primary',
     rel: true,
