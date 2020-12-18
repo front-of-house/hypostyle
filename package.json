@@ -22,14 +22,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/sure-thing/hyposcript.git"
+    "url": "git+ssh://git@github.com/sure-thing/hypostyle.git"
   },
   "author": "estrattonbailey",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sure-thing/hyposcript/issues"
+    "url": "https://github.com/sure-thing/hypostyle/issues"
   },
-  "homepage": "https://github.com/sure-thing/hyposcript#readme",
+  "homepage": "https://github.com/sure-thing/hypostyle#readme",
   "devDependencies": {
     "baretest": "^2.0.0",
     "commitizen": "^4.2.1",
