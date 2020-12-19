@@ -4,7 +4,6 @@
   "description": "",
   "source": "index.js",
   "main": "dist/hypostyle.js",
-  "exports": "./dist/hypostyle.modern.js",
   "module": "./dist/hypostyle.module.js",
   "unpkg": "./dist/hypostyle.umd.js",
   "files": [
