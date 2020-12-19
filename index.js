@@ -30,7 +30,7 @@ export function css (style, theme) {
 
     for (let i = 0; i < values.length; i++) {
       const value = values[i]
-      const themeValue = themeScale ? themeScale[value] : value
+      const themeValue = themeScale ? themeScale[value] || value : value
       const unitValue = unit ? unit(themeValue) : themeValue
 
       let s = styles

@@ -34,7 +34,33 @@ export default (test, assert) => {
       borderBottomRightRadius: '4px'
     })
 
-    assert(styles.borderBottomRightRadius, '4px')
+    assert(styles.borderBottomRightRadius === '4px')
+  })
+
+  test('non-theme matched', () => {
+    const { styles } = hypostyle({
+      c: 'other'
+    })
+
+    assert(styles.color === 'other')
+  })
+
+  test('prop with scale and provided value', () => {
+    const { styles } = hypostyle({
+      w: '50%'
+    })
+
+    assert(styles.width === '50%')
+  })
+
+  test('percentOrPixel heuristic', () => {
+    const { styles } = hypostyle({
+      w: 5,
+      h: 1 / 2
+    })
+
+    assert(styles.width === '5px')
+    assert(styles.height === '50%')
   })
 
   test('can merge theme', () => {
@@ -49,7 +75,7 @@ export default (test, assert) => {
       }
     )
 
-    assert(styles.color, 'blue')
+    assert(styles.color === 'blue')
   })
 
   test('can merge shorthands', () => {
@@ -67,8 +93,8 @@ export default (test, assert) => {
       }
     )
 
-    assert(styles.background, 'blue')
-    assert(styles.borderRadius, '4px')
+    assert(styles.background === 'blue')
+    assert(styles.borderRadius === '4px')
   })
 
   test('variants', () => {
@@ -88,8 +114,8 @@ export default (test, assert) => {
       }
     )
 
-    assert(styles.color, 'blue')
-    assert(styles.background, 'whitesmoke')
+    assert(styles.color === 'blue')
+    assert(styles.background === 'whitesmoke')
   })
 
   test('breakpoints', () => {
@@ -102,9 +128,9 @@ export default (test, assert) => {
       }
     )
 
-    assert(styles.color, 'blue')
-    assert(styles['@media (min-width: 400px)'].color, 'red')
-    assert(styles['@media (min-width: 800px)'].color, 'green')
+    assert(styles.color === 'blue')
+    assert(styles['@media (min-width: 400px)'].color === 'red')
+    assert(styles['@media (min-width: 800px)'].color === 'green')
   })
 
   test('pseudo and other selectors', () => {
@@ -121,10 +147,10 @@ export default (test, assert) => {
       }
     })
 
-    assert(styles[':hover'].color, 'blue')
-    assert(styles[':hover'].paddingTop, '8px')
-    assert(styles.div.color, 'blue')
-    assert(styles['div > foo'].color, 'blue')
+    assert(styles[':hover'].color === 'blue')
+    assert(styles[':hover'].paddingTop === '8px')
+    assert(styles.div.color === 'blue')
+    assert(styles['div > foo'].color === 'blue')
   })
 
   test('pick', () => {
