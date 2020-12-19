@@ -63,6 +63,14 @@ export default (test, assert) => {
     assert(styles.height === '50%')
   })
 
+  test('px heuristic', () => {
+    const { styles } = hypostyle({
+      pt: '4px'
+    })
+
+    assert(styles.paddingTop === '4px')
+  })
+
   test('can merge theme', () => {
     const { styles } = hypostyle(
       {
