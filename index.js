@@ -15,14 +15,16 @@ function process (style, theme) {
   const styles = {}
 
   for (const prop of Object.keys(style)) {
-    if (/:/.test(prop)) {
-      styles[prop] = process(style[prop], theme)
-      continue
-    }
-
     // if rules is undefined, the prop is some normie CSS prop
     const { rules = [prop], scale, unit } = mapping[prop] || {}
     const themeScale = theme[scale]
+    const rawValue = style[prop]
+
+    if (typeof rawValue === 'object' && !Array.isArray(rawValue)) {
+      styles[prop] = process(rawValue, theme)
+      continue
+    }
+
     // just make all values resposive-ready
     const values = [].concat(style[prop])
 

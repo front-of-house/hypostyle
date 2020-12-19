@@ -107,16 +107,24 @@ export default (test, assert) => {
     assert(styles['@media (min-width: 800px)'].color, 'green')
   })
 
-  test('pseudo', () => {
+  test('pseudo and other selectors', () => {
     const styles = hypostyle({
       ':hover': {
         c: 'blue',
         p: 2
+      },
+      div: {
+        c: 'blue'
+      },
+      'div > foo': {
+        c: 'blue'
       }
     })
 
     assert(styles[':hover'].color, 'blue')
     assert(styles[':hover'].paddingTop, '8px')
+    assert(styles.div.color, 'blue')
+    assert(styles['div > foo'].color, 'blue')
   })
 
   test('clean', () => {
