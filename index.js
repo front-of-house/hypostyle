@@ -2,7 +2,7 @@ import { mapping } from './lib/mapping'
 import { theme as defaultTheme } from './lib/theme'
 import { shorthands as defaultShorthands } from './lib/shorthands'
 
-function mergeTheme ({ variants, shorthands, ...theme }) {
+export function createTheme ({ variants, shorthands, ...theme }) {
   return {
     ...defaultTheme,
     ...theme,
@@ -11,7 +11,7 @@ function mergeTheme ({ variants, shorthands, ...theme }) {
   }
 }
 
-function process (style, theme) {
+export function css (style, theme) {
   const styles = {}
 
   for (const prop of Object.keys(style)) {
@@ -21,7 +21,7 @@ function process (style, theme) {
     const rawValue = style[prop]
 
     if (typeof rawValue === 'object' && !Array.isArray(rawValue)) {
-      styles[prop] = process(rawValue, theme)
+      styles[prop] = css(rawValue, theme)
       continue
     }
 
@@ -52,32 +52,35 @@ function process (style, theme) {
 }
 
 export function hypostyle (props, theme = {}) {
-  const { variants, shorthands, ...mergedTheme } = mergeTheme(theme)
+  const t = createTheme(theme)
 
   const styles = {}
 
   for (const prop of Object.keys(props)) {
     // shorthand exists and prop is true
-    if (shorthands[prop] && props[prop] === true) {
-      Object.assign(styles, shorthands[prop])
-    } else if (variants[prop]) {
-      Object.assign(styles, variants[prop][props[prop]])
+    if (t.shorthands[prop] && props[prop] === true) {
+      Object.assign(styles, t.shorthands[prop])
+    } else if (t.variants[prop]) {
+      Object.assign(styles, t.variants[prop][props[prop]])
     } else {
       styles[prop] = props[prop]
     }
   }
 
-  return process(styles, mergedTheme)
+  return {
+    styles: css(styles, t),
+    theme: t
+  }
 }
 
-export function clean (props, theme = {}) {
-  const { variants, shorthands } = mergeTheme(theme)
+export function pick (props, theme = {}) {
+  const t = createTheme(theme)
 
   const styles = {}
   const extra = {}
 
   for (const prop of Object.keys(props)) {
-    if (shorthands[prop] || variants[prop] || mapping[prop]) {
+    if (t.shorthands[prop] || t.variants[prop] || mapping[prop]) {
       styles[prop] = props[prop]
     } else {
       extra[prop] = props[prop]
@@ -86,6 +89,7 @@ export function clean (props, theme = {}) {
 
   return {
     styles,
-    props: extra
+    props: extra,
+    theme: t
   }
 }

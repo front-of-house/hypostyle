@@ -1,4 +1,4 @@
-import { hypostyle, clean } from '../index'
+import { hypostyle, pick } from '../index'
 import { mapping } from '../lib/mapping'
 import { shorthands } from '../lib/shorthands'
 import { theme } from '../lib/theme'
@@ -6,8 +6,8 @@ import { theme } from '../lib/theme'
 export default (test, assert) => {
   for (const key of Object.keys(shorthands)) {
     test(`shorthand - ${key}`, () => {
-      const rawStyles = hypostyle(shorthands[key])
-      const styles = hypostyle({ [key]: true })
+      const { styles: rawStyles } = hypostyle(shorthands[key])
+      const { styles } = hypostyle({ [key]: true })
 
       assert.deepEqual(rawStyles, styles)
     })
@@ -21,7 +21,7 @@ export default (test, assert) => {
       const themeValue = themeScale ? themeScale[rawValue] : rawValue
       const parsedValue = unit ? unit(themeValue) : themeValue
 
-      const styles = hypostyle({ [key]: rawValue })
+      const { styles } = hypostyle({ [key]: rawValue })
 
       for (const rule of rules) {
         assert.deepEqual(styles[rule], parsedValue)
@@ -30,7 +30,7 @@ export default (test, assert) => {
   }
 
   test('works on arbitrary props', () => {
-    const styles = hypostyle({
+    const { styles } = hypostyle({
       borderBottomRightRadius: '4px'
     })
 
@@ -38,7 +38,7 @@ export default (test, assert) => {
   })
 
   test('can merge theme', () => {
-    const styles = hypostyle(
+    const { styles } = hypostyle(
       {
         c: 'primary'
       },
@@ -53,7 +53,7 @@ export default (test, assert) => {
   })
 
   test('can merge shorthands', () => {
-    const styles = hypostyle(
+    const { styles } = hypostyle(
       {
         button: true
       },
@@ -72,7 +72,7 @@ export default (test, assert) => {
   })
 
   test('variants', () => {
-    const styles = hypostyle(
+    const { styles } = hypostyle(
       {
         appearance: 'primary'
       },
@@ -93,7 +93,7 @@ export default (test, assert) => {
   })
 
   test('breakpoints', () => {
-    const styles = hypostyle(
+    const { styles } = hypostyle(
       {
         c: ['blue', 'red', 'green']
       },
@@ -108,7 +108,7 @@ export default (test, assert) => {
   })
 
   test('pseudo and other selectors', () => {
-    const styles = hypostyle({
+    const { styles } = hypostyle({
       ':hover': {
         c: 'blue',
         p: 2
@@ -127,8 +127,8 @@ export default (test, assert) => {
     assert(styles['div > foo'].color, 'blue')
   })
 
-  test('clean', () => {
-    const { props, styles } = clean(
+  test('pick', () => {
+    const { props, styles } = pick(
       {
         c: 'blue',
         f: true,
