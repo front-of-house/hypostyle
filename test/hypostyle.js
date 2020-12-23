@@ -1,36 +1,39 @@
-import { hypostyle, pick } from '../index'
-import { mapping } from '../lib/mapping'
-import { shorthands } from '../lib/shorthands'
-import { theme } from '../lib/theme'
+import { hypostyle } from '../index'
+import shorthands from '../utils/shorthands'
+import macros from '../utils/macros'
+import tokens from '../utils/tokens'
+import * as defaults from '../presets/default'
+
+const { css } = hypostyle(defaults)
 
 export default (test, assert) => {
   for (const key of Object.keys(shorthands)) {
-    test(`shorthand - ${key}`, () => {
-      const { styles: rawStyles } = hypostyle(shorthands[key])
-      const { styles } = hypostyle({ [key]: true })
+    test(`shorthands - ${key}`, () => {
+      const { unit, properties, token: scale } = shorthands[key]
+      const rawValue = 0
+      const themeScale = tokens[scale]
+      const themeValue = themeScale ? themeScale[rawValue] : rawValue
+      const parsedValue = unit ? unit(themeValue) : themeValue
+
+      const styles = css({ [key]: rawValue })
+
+      for (const property of properties) {
+        assert.deepEqual(styles[property], parsedValue)
+      }
+    })
+  }
+
+  for (const key of Object.keys(macros)) {
+    test(`macro - ${key}`, () => {
+      const rawStyles = css(macros[key])
+      const styles = css({ [key]: true })
 
       assert.deepEqual(rawStyles, styles)
     })
   }
 
-  for (const key of Object.keys(mapping)) {
-    test(`mapping - ${key}`, () => {
-      const { unit, rules, scale } = mapping[key]
-      const rawValue = 0
-      const themeScale = theme[scale]
-      const themeValue = themeScale ? themeScale[rawValue] : rawValue
-      const parsedValue = unit ? unit(themeValue) : themeValue
-
-      const { styles } = hypostyle({ [key]: rawValue })
-
-      for (const rule of rules) {
-        assert.deepEqual(styles[rule], parsedValue)
-      }
-    })
-  }
-
   test('works on arbitrary props', () => {
-    const { styles } = hypostyle({
+    const styles = css({
       borderBottomRightRadius: '4px'
     })
 
@@ -38,7 +41,7 @@ export default (test, assert) => {
   })
 
   test('non-theme matched', () => {
-    const { styles } = hypostyle({
+    const styles = css({
       c: 'other'
     })
 
@@ -46,7 +49,7 @@ export default (test, assert) => {
   })
 
   test('prop with scale and provided value', () => {
-    const { styles } = hypostyle({
+    const styles = css({
       w: '50%'
     })
 
@@ -54,7 +57,7 @@ export default (test, assert) => {
   })
 
   test('percentOrPixel heuristic', () => {
-    const { styles } = hypostyle({
+    const styles = css({
       w: 5,
       h: 1 / 2
     })
@@ -64,7 +67,7 @@ export default (test, assert) => {
   })
 
   test('px heuristic', () => {
-    const { styles } = hypostyle({
+    const styles = css({
       pt: '4px'
     })
 
@@ -72,69 +75,67 @@ export default (test, assert) => {
   })
 
   test('can merge theme', () => {
-    const { styles } = hypostyle(
-      {
-        c: 'primary'
-      },
-      {
+    const { css } = hypostyle({
+      tokens: {
         color: {
           primary: 'blue'
         }
-      }
-    )
+      },
+      shorthands
+    })
+    const styles = css({
+      c: 'primary'
+    })
 
     assert(styles.color === 'blue')
   })
 
-  test('can merge shorthands', () => {
-    const { styles } = hypostyle(
-      {
-        button: true
-      },
-      {
-        shorthands: {
-          button: {
-            borderRadius: '4px',
-            bg: 'blue'
-          }
+  test('can merge macros', () => {
+    const { css } = hypostyle({
+      shorthands,
+      macros: {
+        button: {
+          borderRadius: '4px',
+          bg: 'blue'
         }
       }
-    )
+    })
+    const styles = css({
+      button: true
+    })
 
     assert(styles.background === 'blue')
     assert(styles.borderRadius === '4px')
   })
 
   test('variants', () => {
-    const { styles } = hypostyle(
-      {
-        appearance: 'primary'
-      },
-      {
-        variants: {
-          appearance: {
-            primary: {
-              c: 'blue',
-              bg: 'whitesmoke'
-            }
+    const { css } = hypostyle({
+      shorthands,
+      variants: {
+        appearance: {
+          primary: {
+            c: 'blue',
+            bg: 'whitesmoke'
           }
         }
       }
-    )
+    })
+    const styles = css({
+      appearance: 'primary'
+    })
 
     assert(styles.color === 'blue')
     assert(styles.background === 'whitesmoke')
   })
 
   test('breakpoints', () => {
-    const { styles } = hypostyle(
-      {
-        c: ['blue', 'red', 'green']
-      },
-      {
-        breakpoints: ['400px', '800px']
-      }
-    )
+    const { css } = hypostyle({
+      breakpoints: ['400px', '800px'],
+      shorthands
+    })
+    const styles = css({
+      c: ['blue', 'red', 'green']
+    })
 
     assert(styles.color === 'blue')
     assert(styles['@media (min-width: 400px)'].color === 'red')
@@ -142,7 +143,7 @@ export default (test, assert) => {
   })
 
   test('pseudo and other selectors', () => {
-    const { styles } = hypostyle({
+    const styles = css({
       ':hover': {
         c: 'blue',
         p: 2
@@ -162,24 +163,24 @@ export default (test, assert) => {
   })
 
   test('pick', () => {
-    const { props, styles } = pick(
-      {
-        c: 'blue',
-        f: true,
-        appearance: 'primary',
-        className: 'cx'
-      },
-      {
-        variants: {
-          appearance: {
-            primary: {
-              c: 'blue',
-              bg: 'whitesmoke'
-            }
+    const { pick } = hypostyle({
+      tokens,
+      shorthands,
+      macros,
+      variants: {
+        appearance: {
+          primary: {
+            c: 'blue'
           }
         }
       }
-    )
+    })
+    const { props, styles } = pick({
+      c: 'blue',
+      f: true,
+      appearance: 'primary',
+      className: 'cx'
+    })
 
     assert(!!styles.c)
     assert(!!styles.f)

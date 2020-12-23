@@ -1,4 +1,4 @@
-export const shorthands = {
+module.exports = {
   db: { d: 'block' },
   dib: { d: 'inline-block' },
   di: { d: 'inline' },

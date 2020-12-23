@@ -1,23 +1,11 @@
-import { mapping } from './lib/mapping'
-import { theme as defaultTheme } from './lib/theme'
-import { shorthands as defaultShorthands } from './lib/shorthands'
-
-export function createTheme ({ variants, shorthands, ...theme }) {
-  return {
-    ...defaultTheme,
-    ...theme,
-    variants: variants || {},
-    shorthands: Object.assign({}, defaultShorthands, shorthands || {})
-  }
-}
-
-export function css (style, theme) {
+function parse (style, theme) {
   const styles = {}
 
   for (const prop of Object.keys(style)) {
-    // if rules is undefined, the prop is some normie CSS prop
-    const { rules = [prop], scale, unit } = mapping[prop] || {}
-    const themeScale = theme[scale]
+    // if properties is undefined, the prop is some normie CSS prop
+    const { properties = [prop], token: scale, unit } =
+      theme.shorthands[prop] || {}
+    const tokens = theme.tokens[scale]
     const rawValue = style[prop]
 
     if (typeof rawValue === 'object' && !Array.isArray(rawValue)) {
@@ -30,8 +18,8 @@ export function css (style, theme) {
 
     for (let i = 0; i < values.length; i++) {
       const value = values[i]
-      const themeValue = themeScale ? themeScale[value] || value : value
-      const unitValue = unit ? unit(themeValue) : themeValue
+      const token = tokens ? tokens[value] || value : value
+      const unitValue = unit ? unit(token) : token
 
       let s = styles
       const breakpoint = theme.breakpoints[i - 1]
@@ -42,8 +30,8 @@ export function css (style, theme) {
         s = styles[media] = styles[media] || {}
       }
 
-      for (const rule of rules) {
-        s[rule] = unitValue
+      for (const property of properties) {
+        s[property] = unitValue
       }
     }
   }
@@ -51,36 +39,12 @@ export function css (style, theme) {
   return styles
 }
 
-export function hypostyle (props, theme = {}) {
-  const t = createTheme(theme)
-
-  const styles = {}
-
-  for (const prop of Object.keys(props)) {
-    // shorthand exists and prop is true
-    if (t.shorthands[prop] && props[prop] === true) {
-      Object.assign(styles, t.shorthands[prop])
-    } else if (t.variants[prop]) {
-      Object.assign(styles, t.variants[prop][props[prop]])
-    } else {
-      styles[prop] = props[prop]
-    }
-  }
-
-  return {
-    styles: css(styles, t),
-    theme: t
-  }
-}
-
-export function pick (props, theme = {}) {
-  const t = createTheme(theme)
-
+function pick (props, theme) {
   const styles = {}
   const extra = {}
 
   for (const prop of Object.keys(props)) {
-    if (t.shorthands[prop] || t.variants[prop] || mapping[prop]) {
+    if (theme.macros[prop] || theme.variants[prop] || theme.shorthands[prop]) {
       styles[prop] = props[prop]
     } else {
       extra[prop] = props[prop]
@@ -89,7 +53,45 @@ export function pick (props, theme = {}) {
 
   return {
     styles,
-    props: extra,
-    theme: t
+    props: extra
   }
 }
+
+function css (props, theme) {
+  const styles = {}
+
+  for (const prop of Object.keys(props)) {
+    // macro exists AND prop is true
+    if (theme.macros[prop] && props[prop] === true) {
+      Object.assign(styles, theme.macros[prop])
+    } else if (theme.variants[prop]) {
+      Object.assign(styles, theme.variants[prop][props[prop]])
+    } else {
+      styles[prop] = props[prop]
+    }
+  }
+
+  return parse(styles, theme)
+}
+
+function hypostyle (theme = {}) {
+  const t = {
+    tokens: {},
+    breakpoints: ['400px', '800px', '1200px'],
+    shorthands: {},
+    macros: {},
+    variants: {},
+    ...theme
+  }
+
+  return {
+    css (props) {
+      return css(props, t)
+    },
+    pick (props) {
+      return pick(props, t)
+    }
+  }
+}
+
+module.exports = { pick, css, hypostyle }
