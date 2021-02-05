@@ -4,6 +4,7 @@ const { addon: nesting } = require('nano-css/addon/nesting')
 const { addon: keyframes } = require('nano-css/addon/keyframes')
 const { addon: rule } = require('nano-css/addon/rule')
 const { addon: globalAddon } = require('nano-css/addon/global')
+const { addon: hydrate } = require('nano-css/addon/hydrate')
 
 function parse (obj, theme) {
   const styles = {}
@@ -90,14 +91,16 @@ function hypostyle (theme = {}, config = {}) {
     variants: {},
     ...theme
   }
-  const addons = [cache, nesting, keyframes, rule, globalAddon].concat(
+  const addons = [cache, nesting, keyframes, rule, globalAddon, hydrate].concat(
     config.addons || []
   )
 
   let nano = createNano()
 
   function createNano () {
-    const nano = create()
+    const nano = create({
+      sh: typeof document === 'object' ? document.getElementById('hypo') : null
+    })
     addons.map(a => a(nano))
     return nano
   }
