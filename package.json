@@ -49,5 +49,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "nano-css": "^5.3.1"
   }
 }

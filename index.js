@@ -1,20 +1,27 @@
-function parse (style, theme) {
+const { create } = require('nano-css')
+const { addon: cache } = require('nano-css/addon/cache')
+const { addon: nesting } = require('nano-css/addon/nesting')
+const { addon: keyframes } = require('nano-css/addon/keyframes')
+const { addon: rule } = require('nano-css/addon/rule')
+const { addon: globalAddon } = require('nano-css/addon/global')
+
+function parse (obj, theme) {
   const styles = {}
 
-  for (const prop of Object.keys(style)) {
+  for (const prop of Object.keys(obj)) {
     // if properties is undefined, the prop is some normie CSS prop
     const { properties = [prop], token: scale, unit } =
       theme.shorthands[prop] || {}
     const tokens = theme.tokens[scale]
-    const rawValue = style[prop]
+    const rawValue = obj[prop]
 
     if (typeof rawValue === 'object' && !Array.isArray(rawValue)) {
-      styles[prop] = css(rawValue, theme)
+      styles[prop] = style(rawValue, theme)
       continue
     }
 
     // just make all values resposive-ready
-    const values = [].concat(style[prop])
+    const values = [].concat(obj[prop])
 
     for (let i = 0; i < values.length; i++) {
       const value = values[i]
@@ -57,7 +64,7 @@ function pick (props, theme) {
   }
 }
 
-function css (props, theme) {
+function style (props, theme) {
   const styles = {}
 
   for (const prop of Object.keys(props)) {
@@ -74,7 +81,7 @@ function css (props, theme) {
   return parse(styles, theme)
 }
 
-function hypostyle (theme = {}) {
+function hypostyle (theme = {}, config = {}) {
   const t = {
     tokens: {},
     breakpoints: ['400px', '800px', '1200px'],
@@ -83,10 +90,33 @@ function hypostyle (theme = {}) {
     variants: {},
     ...theme
   }
+  const addons = [cache, nesting, keyframes, rule, globalAddon].concat(
+    config.addons || []
+  )
+
+  let nano = createNano()
+
+  function createNano () {
+    const nano = create()
+    addons.map(a => a(nano))
+    return nano
+  }
 
   return {
     css (props) {
-      return css(props, t)
+      return nano.rule(style(props, t))
+    },
+    injectGlobal (props) {
+      return nano.global(style(props, t))
+    },
+    keyframes: nano.keyframes,
+    flush () {
+      const raw = nano.raw
+      nano = createNano()
+      return raw
+    },
+    style (props) {
+      return style(props, t)
     },
     pick (props) {
       return pick(props, t)
@@ -94,4 +124,4 @@ function hypostyle (theme = {}) {
   }
 }
 
-module.exports = { pick, css, hypostyle }
+module.exports = { hypostyle }
