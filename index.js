@@ -91,6 +91,7 @@ function hypostyle (theme = {}, config = {}) {
     variants: {},
     ...theme
   }
+
   const addons = [cache, nesting, keyframes, rule, globalAddon, hydrate].concat(
     config.addons || []
   )
