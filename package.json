@@ -2,12 +2,9 @@
   "name": "hypostyle",
   "version": "0.1.0",
   "description": "",
-  "source": "index.js",
-  "main": "dist/hypostyle.js",
-  "module": "./dist/hypostyle.module.js",
-  "unpkg": "./dist/hypostyle.umd.js",
+  "main": "index.js",
   "files": [
-    "dist",
+    "index.js",
     "utils",
     "presets"
   ],
@@ -15,8 +12,7 @@
     "test": "node -r esm test",
     "test:watch": "nodemon -r esm test",
     "format": "prettier-standard --format",
-    "lint": "prettier-standard --lint",
-    "build": "microbundle build"
+    "lint": "prettier-standard --lint"
   },
   "husky": {
     "hooks": {
@@ -40,7 +36,6 @@
     "cz-conventional-changelog": "^3.3.0",
     "esm": "^3.2.25",
     "husky": "^4.2.5",
-    "microbundle": "^0.12.4",
     "nodemon": "^2.0.4",
     "prettier-standard": "^16.4.1",
     "semantic-release": "^17.2.1"
@@ -49,5 +44,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "nano-css": "^5.3.1"
   }
 }

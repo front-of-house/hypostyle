@@ -4,7 +4,7 @@ import macros from '../utils/macros'
 import tokens from '../utils/tokens'
 import * as defaults from '../presets/default'
 
-const { css } = hypostyle(defaults)
+const { css, style, flush } = hypostyle(defaults)
 
 export default (test, assert) => {
   for (const key of Object.keys(shorthands)) {
@@ -15,7 +15,7 @@ export default (test, assert) => {
       const themeValue = themeScale ? themeScale[rawValue] : rawValue
       const parsedValue = unit ? unit(themeValue) : themeValue
 
-      const styles = css({ [key]: rawValue })
+      const styles = style({ [key]: rawValue })
 
       for (const property of properties) {
         assert.deepEqual(styles[property], parsedValue)
@@ -25,15 +25,15 @@ export default (test, assert) => {
 
   for (const key of Object.keys(macros)) {
     test(`macro - ${key}`, () => {
-      const rawStyles = css(macros[key])
-      const styles = css({ [key]: true })
+      const rawStyles = style(macros[key])
+      const styles = style({ [key]: true })
 
       assert.deepEqual(rawStyles, styles)
     })
   }
 
   test('works on arbitrary props', () => {
-    const styles = css({
+    const styles = style({
       borderBottomRightRadius: '4px'
     })
 
@@ -41,7 +41,7 @@ export default (test, assert) => {
   })
 
   test('non-theme matched', () => {
-    const styles = css({
+    const styles = style({
       c: 'other'
     })
 
@@ -49,7 +49,7 @@ export default (test, assert) => {
   })
 
   test('prop with scale and provided value', () => {
-    const styles = css({
+    const styles = style({
       w: '50%'
     })
 
@@ -57,7 +57,7 @@ export default (test, assert) => {
   })
 
   test('percentOrPixel heuristic', () => {
-    const styles = css({
+    const styles = style({
       w: 5,
       h: 1 / 2
     })
@@ -67,7 +67,7 @@ export default (test, assert) => {
   })
 
   test('px heuristic', () => {
-    const styles = css({
+    const styles = style({
       pt: '4px'
     })
 
@@ -75,7 +75,7 @@ export default (test, assert) => {
   })
 
   test('can merge theme', () => {
-    const { css } = hypostyle({
+    const { style } = hypostyle({
       tokens: {
         color: {
           primary: 'blue'
@@ -83,7 +83,7 @@ export default (test, assert) => {
       },
       shorthands
     })
-    const styles = css({
+    const styles = style({
       c: 'primary'
     })
 
@@ -91,7 +91,7 @@ export default (test, assert) => {
   })
 
   test('can merge macros', () => {
-    const { css } = hypostyle({
+    const { style } = hypostyle({
       shorthands,
       macros: {
         button: {
@@ -100,7 +100,7 @@ export default (test, assert) => {
         }
       }
     })
-    const styles = css({
+    const styles = style({
       button: true
     })
 
@@ -109,7 +109,7 @@ export default (test, assert) => {
   })
 
   test('variants', () => {
-    const { css } = hypostyle({
+    const { style } = hypostyle({
       shorthands,
       variants: {
         appearance: {
@@ -120,7 +120,7 @@ export default (test, assert) => {
         }
       }
     })
-    const styles = css({
+    const styles = style({
       appearance: 'primary'
     })
 
@@ -129,11 +129,11 @@ export default (test, assert) => {
   })
 
   test('breakpoints', () => {
-    const { css } = hypostyle({
+    const { style } = hypostyle({
       breakpoints: ['400px', '800px'],
       shorthands
     })
-    const styles = css({
+    const styles = style({
       c: ['blue', 'red', 'green']
     })
 
@@ -142,8 +142,21 @@ export default (test, assert) => {
     assert(styles['@media (min-width: 800px)'].color === 'green')
   })
 
+  test('breakpoints to sheet', () => {
+    const { css, flush } = hypostyle({
+      breakpoints: ['400px', '800px'],
+      shorthands
+    })
+    css({ c: ['blue', 'red', 'green'] })
+    const sheet = flush()
+
+    assert(sheet.includes('blue'))
+    assert(sheet.includes('@media (min-width: 400px'))
+    assert(sheet.includes('@media (min-width: 800px)'))
+  })
+
   test('pseudo and other selectors', () => {
-    const styles = css({
+    const styles = style({
       ':hover': {
         c: 'blue',
         p: 2
@@ -186,5 +199,44 @@ export default (test, assert) => {
     assert(!!styles.f)
     assert(!!styles.appearance)
     assert(!!props.className)
+  })
+
+  test('css', () => {
+    const cx = css({ c: 'blue' })
+    const cx2 = css({ c: 'blue' })
+    assert(typeof cx === 'string')
+    assert.equal(cx, cx2)
+  })
+
+  test('flush', () => {
+    flush() // clear
+    const cn = css({ c: 'blue' }).trim() // remove spaces
+    const sheet = flush()
+    assert(new RegExp(cn).test(sheet))
+  })
+
+  test('injectGlobal', () => {
+    const { injectGlobal, flush } = hypostyle()
+    injectGlobal({ html: { color: 'blue' } })
+    const sheet = flush()
+    assert(sheet.includes('color:blue'))
+  })
+
+  test('keyframes', () => {
+    const { keyframes, flush } = hypostyle()
+    const animation = keyframes({
+      '0%': {
+        transform: 'rotate(0deg)'
+      },
+      '100%': {
+        transform: 'rotate(359deg)'
+      }
+    })
+    css({
+      animation: `${animation} 1s`
+    })
+    const sheet = flush()
+
+    assert(sheet.includes(animation))
   })
 }
