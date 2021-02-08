@@ -154,7 +154,8 @@ const shorthands = {
   },
   fe: {
     properties: ['fontWeight'],
-    token: 'fontWeight'
+    token: 'fontWeight',
+    unit: str
   },
   ta: {
     properties: ['textAlign']
