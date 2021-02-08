@@ -17,6 +17,8 @@ const tokens = {
   lineHeight: [1.1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6]
 }
 
+const breakpoints = ['400px', '800px', '1200px']
+
 function px (v) {
   return typeof v === 'number' ? v + 'px' : v
 }
@@ -246,4 +248,4 @@ const macros = {
   taj: { ta: 'justify' }
 }
 
-module.exports = { tokens, shorthands, macros }
+module.exports = { tokens, breakpoints, shorthands, macros }

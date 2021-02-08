@@ -85,7 +85,7 @@ function style (props, theme) {
 function hypostyle (theme = {}, config = {}) {
   const t = {
     tokens: {},
-    breakpoints: ['400px', '800px', '1200px'],
+    breakpoints: [],
     shorthands: {},
     macros: {},
     variants: {},
