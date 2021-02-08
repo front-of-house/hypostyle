@@ -1,9 +1,7 @@
 import { hypostyle } from '../index'
-import shorthands from '../utils/shorthands'
-import macros from '../utils/macros'
-import tokens from '../utils/tokens'
-import * as defaults from '../presets/default'
+import * as defaults from '../presets'
 
+const { tokens, shorthands, macros } = defaults
 const { css, style, flush } = hypostyle(defaults)
 
 export default (test, assert) => {

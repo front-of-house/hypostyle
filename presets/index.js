@@ -1,3 +1,22 @@
+const tokens = {
+  space: [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64],
+  fontSize: ['3rem', '3rem', '2.2rem', '1.8rem', '1.4rem', '1rem', '0.875rem'],
+  fontWeight: [
+    '0',
+    '100',
+    '200',
+    '300',
+    '400',
+    '500',
+    '600',
+    '700',
+    '800',
+    '900',
+    '1000'
+  ],
+  lineHeight: [1.1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6]
+}
+
 function px (v) {
   return typeof v === 'number' ? v + 'px' : v
 }
@@ -193,4 +212,38 @@ shorthands.fontWeight = shorthands.fe
 shorthands.textAlign = shorthands.ta
 shorthands.lineHeight = shorthands.lh
 
-module.exports = shorthands
+const macros = {
+  db: { d: 'block' },
+  dib: { d: 'inline-block' },
+  di: { d: 'inline' },
+  f: { d: 'flex' },
+  fw: { fw: 'wrap' },
+  ais: { ai: 'flex-start' },
+  aic: { ai: 'center' },
+  aie: { ai: 'flex-end' },
+  jcs: { jc: 'flex-start' },
+  jcc: { jc: 'center' },
+  jce: { jc: 'flex-end' },
+  jca: { jc: 'space-around' },
+  jcb: { jc: 'space-between' },
+  rel: { position: 'relative' },
+  abs: { position: 'absolute' },
+  fix: { position: 'fixed' },
+  top: { top: 0 },
+  bottom: { bottom: 0 },
+  left: { left: 0 },
+  right: { right: 0 },
+  cover: {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
+  w: { w: 1 },
+  h: { h: 1 },
+  tac: { ta: 'center' },
+  tar: { ta: 'right' },
+  taj: { ta: 'justify' }
+}
+
+module.exports = { tokens, shorthands, macros }
