@@ -7,6 +7,14 @@ type UnitlessKeyValue = { [name: string]: Unitless }
 type AnyKeyValue = { [name: string]: any }
 type CSSPropertyNames = keyof CSSProperties
 
+export type StyleObject = CSSProperties | CSSPsuedos | {
+  [property: string]: StyleObject;
+}
+export type HypostyleProperties = CSSPropertyNames | CSSPsuedos | string;
+export type HypostyleObject = CSSProperties | CSSPsuedos | {
+  [property in HypostyleProperties]: HypostyleObject | string | number | boolean | undefined;
+}
+
 export interface Tokens {
   color?: StringKeyValue | string[];
   space?: Unitless[] | UnitlessKeyValue;
@@ -27,8 +35,12 @@ export interface Shorthands {
 }
 
 export interface Macros {
-  [macro: string]: {
-    [prop: string]: Unitless;
+  [macro: string]: HypostyleObject;
+}
+
+export interface Variants {
+  [variation: string]: {
+    [name: string]: HypostyleObject;
   }
 }
 
@@ -39,17 +51,10 @@ export type Theme = {
   tokens?: Tokens;
   shorthands?: Shorthands;
   macros?: Macros;
+  variants?: Variants;
 } & UserTheme
 
 export type Options = {}
-
-export type StyleObject = CSSProperties | CSSPsuedos | {
-  [property: string]: StyleObject;
-}
-export type HypostyleProperties = CSSPropertyNames | CSSPsuedos | string;
-export type HypostyleObject = CSSProperties | CSSPsuedos | {
-  [property in HypostyleProperties]: HypostyleObject | string | number | boolean | undefined;
-}
 
 export declare function hypostyle(theme?: Theme, options?: Options): {
   css(props: Partial<HypostyleObject>): string;
