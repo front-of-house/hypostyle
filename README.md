@@ -4,48 +4,84 @@
 
 ![npm](https://img.shields.io/npm/v/hypostyle) [![](https://badgen.net/bundlephobia/minzip/hypostyle)](https://bundlephobia.com/result?p=hypostyle)
 
-A hyper-minimal framework-agnostic CSS-in-JS utility. Hypostyle fits somewhere
-between inline styles and any styling solution that supports style objects.
+Hyper minimal framework agnostic CSS-in-JS with a next-gen API. Fast af, powered
+by [nano-css](https://github.com/streamich/nano-css).
 
 ```
 npm i hypostyle
 ```
 
-#### Features
+#### Why
 
-- easy theming
-- use abbreviations & shorthands to quickly write styles
-- supports nesting, keyframes, and everything you'd expect
-- works in both the browser & server for SSR
-- full Typescript support
-- fast af, powered by [nano-css](https://github.com/streamich/nano-css)
+Hypostyle supports everything you'd expect from a modern CSS-in-JS solution:
+themeing, nesting, SSR & Typescript support, etc. But it also includes a
+[styled-system](https://styled-system.com/)-like API for property shorthands and
+responsive values that elevates hypostyle above other similar libraries.
 
-#### Quickstart
+<details>
+  <summary>Example</summary>
 
 ```javascript
 import { hypostyle } from 'hypostyle'
 
 const { css } = hypostyle({
+  breakpoints: ['400px', '800px', '1200px'],
   tokens: {
     color: {
+      black: '#333',
       primary: '#ff4567'
-    }
+    },
+    space: [0, 4, 8, 12, 16, 20, 24, 28, 32]
   },
   shorthands: {
     c: {
       properties: ['color'],
       token: 'color'
+    },
+    px: {
+      properties: ['paddingLeft', 'paddingRight'],
+      token: 'space',
+      unit (value) {
+        return value + 'px'
+      }
     }
   }
 })
-
-css({
-  c: 'primary',
-  background: 'white'
-}) // => { color: '#ff4567', background: 'white' }
 ```
 
-# Usage
+```javascript
+function Component () {
+  const classname = css({
+    c: 'primary',
+    px: [4, 8]
+  })
+
+  return <div class={classname} />
+}
+```
+
+```css
+color: #ff4567;
+padding-left: 16px;
+padding-right: 16px;
+@media (min-width: 400px) {
+  padding-left: 32px;
+  padding-right: 32px;
+}
+```
+
+</details>
+
+#### Contents
+
+- [Presets](#presets)
+- [Responsive Values](#responsive-values)
+- [Tokens & Shorthands](#tokens--shorthands)
+- [Macros](#macros)
+- [Variants](#variants)
+- [Browser Usage](#browser-usage)
+
+# Getting Started
 
 The `hypostyle()` function is used to configure a theme and return an instance.
 Your theme can contain the following properties:
@@ -81,7 +117,7 @@ css({
 }) // => { display: 'none', '@media (min-width: 400px)': { display: 'block' } }
 ```
 
-### Tokens & Shorthands
+## Tokens & Shorthands
 
 Tokens are either objects of named values, or arrays (scales) of values.
 
@@ -155,7 +191,7 @@ const { css } = hypostyle({
 css({ background: 'primary' }) // => { background: '#ff4567' }
 ```
 
-### Macros
+## Macros
 
 `macros` are simple boolean values that expand to be full style objects. The
 style objects can use any shorthands or tokens you have configured.
@@ -177,7 +213,7 @@ These are most helpful when used with JSX (via React,
 <Box cover />
 ```
 
-### Variants
+## Variants
 
 Slightly higher-level than macros are variants, which allow you to define named
 style blocks based on property values. Again, your style blocks here can use any
@@ -207,17 +243,15 @@ css({ appearance: 'link' }) // => { color: 'blue', textDecoration: 'underline' }
 
 ## Browser Usage
 
-Hypostyle works out-of-the-box in the browser. No config needed!
+Hypostyle works out-of-the-box in the browser 👍
 
-### Global Styles
-
-Easy.
+#### Global Styles
 
 ```javascript
 import { hypostyle } from 'hypostyle'
 import * as presets from 'hypostyle/presets'
 
-const { css, injectGlobal } = hypostyle(presets)
+const { injectGlobal } = hypostyle(presets)
 
 injectGlobal({
   'html, body': {
@@ -227,7 +261,7 @@ injectGlobal({
 })
 ```
 
-### Keyframes
+#### Keyframes
 
 ```javascript
 const { keyframes } = hypostyle(presets)
@@ -248,14 +282,30 @@ css({
 
 ## Server Usage
 
-TBD
+```javascript
+const { css, flush, injectGlobal } = hypostyle(presets)
+injectGlobal({ '*': { boxSizing: 'border-box' } })
+const classname = css({ c: 'primary' })
+const stylesheet = flush()
+
+const html = `
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>${stylesheet}</style>
+  </head>
+  <body>
+    <div class="${classname}">Hello world</div>
+  </body>
+</html>
+`
+```
 
 ### Related
 
 - [hyposcript](https://github.com/sure-thing/hyposcript)
 - [hypobox](https://github.com/sure-thing/hypobox)
 - [styled-system](https://github.com/styled-system/styled-system)
-- [stitches](https://github.com/modulz/stitches)
 - [nano-css](https://github.com/streamich/nano-css)
 
 ### License
