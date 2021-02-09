@@ -57,7 +57,10 @@ export type Theme = {
 export type Options = {}
 
 export declare function hypostyle(theme?: Theme, options?: Options): {
-  css(props: Partial<HypostyleObject>): string;
+  css(
+    props: ((tokens: Theme['tokens']) => Partial<HypostyleObject>) |
+    Partial<HypostyleObject>
+  ): string;
   injectGlobal(props: Partial<HypostyleObject>): any;
   keyframes: KeyframesAddon['keyframes'];
   flush(): string;

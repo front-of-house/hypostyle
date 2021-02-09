@@ -243,4 +243,14 @@ export default (test, assert) => {
 
     assert(sheet.includes(animation))
   })
+
+  test('css as a function', () => {
+    const { css, flush } = hypostyle(defaults)
+
+    css(tokens => ({ fs: tokens.fontSize[1] }))
+
+    const sheet = flush()
+
+    assert(sheet.includes('font-size:3rem'))
+  })
 }
