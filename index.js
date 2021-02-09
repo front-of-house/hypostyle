@@ -108,7 +108,7 @@ function hypostyle (theme = {}, config = {}) {
 
   return {
     css (props) {
-      return nano.rule(style(props, t))
+      return Object.keys(props).length ? nano.rule(style(props, t)) : ''
     },
     injectGlobal (props) {
       return nano.global(style(props, t))

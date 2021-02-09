@@ -30,6 +30,12 @@ export default (test, assert) => {
     })
   }
 
+  test('no styles, empty', () => {
+    const cn = css({})
+
+    assert.equal('', cn)
+  })
+
   test('works on arbitrary props', () => {
     const styles = style({
       borderBottomRightRadius: '4px'
