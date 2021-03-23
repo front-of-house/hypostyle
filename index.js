@@ -17,8 +17,20 @@ function parse (obj, theme) {
     const rawValue = obj[prop]
 
     if (typeof rawValue === 'object' && !Array.isArray(rawValue)) {
-      styles[prop] = style(rawValue, theme)
-      continue
+      const rawValueKeys = Object.keys(rawValue)
+
+      if (/^\d/.test(rawValueKeys[0])) {
+        const newRawValue = []
+
+        for (const key of rawValueKeys) {
+          newRawValue[key] = rawValue[key]
+        }
+
+        obj[prop] = newRawValue
+      } else {
+        styles[prop] = style(rawValue, theme)
+        continue // continue main loop
+      }
     }
 
     // just make all values resposive-ready
@@ -29,14 +41,21 @@ function parse (obj, theme) {
       const token = tokens ? tokens[value] || value : value
       const unitValue = unit ? unit(token) : token
 
+      // drop undefined values, all others pass through
+      if (unitValue === undefined) continue
+
       let s = styles
       const breakpoint = theme.breakpoints[i - 1]
 
       if (breakpoint) {
         const media = `@media (min-width: ${breakpoint})`
 
+        // drop down a level (into breakpoint)
         s = styles[media] = styles[media] || {}
       }
+
+      // if someone passes a breakpoint that doesn't exist
+      if (!breakpoint && i > 0) continue
 
       for (const property of properties) {
         s[property] = unitValue

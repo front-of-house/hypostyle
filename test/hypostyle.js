@@ -146,6 +146,31 @@ export default (test, assert) => {
     assert(styles['@media (min-width: 800px)'].color === 'green')
   })
 
+  test('too many breakpoints', () => {
+    const { style } = hypostyle({
+      breakpoints: ['400px', '800px'],
+      shorthands
+    })
+    const styles = style({
+      c: ['blue', 'red', 'green', 'tomato']
+    })
+
+    assert(styles.color === 'blue') // could otherwise be tomato
+  })
+
+  test('named breakpoints', () => {
+    const { style } = hypostyle({
+      breakpoints: ['400px', '800px', '1200px'],
+      shorthands
+    })
+    const styles = style({
+      c: { 0: 'blue', 2: 'red' }
+    })
+
+    assert(styles.color === 'blue')
+    assert(styles['@media (min-width: 800px)'].color === 'red')
+  })
+
   test('breakpoints to sheet', () => {
     const { css, flush } = hypostyle({
       breakpoints: ['400px', '800px'],
@@ -252,5 +277,60 @@ export default (test, assert) => {
     const sheet = flush()
 
     assert(sheet.includes('font-size:3rem'))
+  })
+
+  test('nested elements', () => {
+    const { css, flush } = hypostyle(defaults)
+
+    const cn = css({
+      div: {
+        color: 'tomato'
+      }
+    })
+    const sheet = flush()
+    const selector = new RegExp(`.${cn.trim()} div`)
+
+    assert(selector.test(sheet) === true)
+  })
+
+  test('pseudo selectors', () => {
+    const { css, flush } = hypostyle(defaults)
+
+    const cn = css({
+      '&:hover': {
+        color: 'tomato'
+      }
+    })
+    const sheet = flush()
+    const selector = new RegExp(`.${cn.trim()}:hover`)
+
+    assert(selector.test(sheet) === true)
+  })
+
+  test('pseudo selectors w/ nested elements', () => {
+    const { css, flush } = hypostyle(defaults)
+
+    const cn = css({
+      '&:hover div': {
+        color: 'tomato'
+      }
+    })
+    const sheet = flush()
+    const selector = new RegExp(`.${cn.trim()}:hover div`)
+
+    assert(selector.test(sheet) === true)
+  })
+
+  test('media queries', () => {
+    const { css, flush } = hypostyle(defaults)
+
+    css({
+      '@media (min-width: 567px)': {
+        color: 'tomato'
+      }
+    })
+    const sheet = flush()
+
+    assert(/@media\s\(min-width: 567px\)/.test(sheet) === true)
   })
 }
