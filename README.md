@@ -4,7 +4,9 @@
 
 ![npm](https://img.shields.io/npm/v/hypostyle) [![](https://badgen.net/bundlephobia/minzip/hypostyle)](https://bundlephobia.com/result?p=hypostyle)
 
-Hyper minimal framework agnostic CSS-in-JS with a next-gen API. Fast af, powered
+Minimalist [5th
+Generation](https://github.com/streamich/freestyler/blob/master/docs/en/generations.md#5th-generation)
+CSS-in-JS built for concision and extension. Fast af, powered
 by [nano-css](https://github.com/streamich/nano-css).
 
 ```
@@ -13,13 +15,16 @@ npm i hypostyle
 
 #### Why
 
-Hypostyle supports everything you'd expect from a modern CSS-in-JS solution:
-themeing, nesting, SSR & Typescript support, etc. But it also includes a
-[styled-system](https://styled-system.com/)-like API for property shorthands and
-responsive values that elevates hypostyle above other similar libraries.
+Typical [4th
+gen](https://github.com/streamich/freestyler/blob/master/docs/en/generations.md#4th-generation)
+CSS-in-JS can be very verbose. `hypostyle` provides a way of authoring CSS in
+Javascript using shortcuts and abbreviations — like atomic CSS and frameworks
+like [Tailwind](https://tailwindcss.com/) — at a fraction of the bundle size.
+`hypostyle` is also framework-agnostic, meaning it can be adapted into any UI
+framework and _any CSS-in-JS library_ that supports style objects.
 
 <details>
-  <summary>Example</summary>
+  <summary>Full Example</summary>
 
 ```javascript
 import { hypostyle } from 'hypostyle'
@@ -49,16 +54,20 @@ const { css } = hypostyle({
 })
 ```
 
-```javascript
-function Component () {
-  const classname = css({
-    c: 'primary',
-    px: [4, 8]
-  })
+➕
 
-  return <div class={classname} />
+```javascript
+const classname = css({
+  c: 'primary',
+  px: [4, 8]
+})
+
+function Component () {
+  return <div className={classname} />
 }
 ```
+
+👇
 
 ```css
 color: #ff4567;
@@ -79,7 +88,7 @@ padding-right: 16px;
 - [Tokens & Shorthands](#tokens--shorthands)
 - [Macros](#macros)
 - [Variants](#variants)
-- [Browser Usage](#browser-usage)
+- [Writing CSS](#writing-css)
 
 # Getting Started
 
@@ -105,16 +114,46 @@ import * as presets from 'hypostyle/presets'
 const { css } = hypostyle(presets)
 ```
 
-#### Responsive Values
+## Responsive Values
 
 _All values can be responsive_ by passing an array of values. This array maps to
 the `breakpoints` array on your theme. The first value is mobile, and the
-remaining values are convered to `@media` breakpoints.
+remaining values are convered into `@media` breakpoints.
 
 ```javascript
 css({
-  d: ['none', 'block']
-}) // => { display: 'none', '@media (min-width: 400px)': { display: 'block' } }
+  d: ['block', 'none']
+})
+```
+
+Will generate:
+
+```css
+.__3sxrbm {
+  display: block;
+}
+@media (min-width: 400px) {
+  .__3sxrbm {
+    display: none;
+  }
+}
+```
+
+Alternatively — and useful if you want to only specify a single breakpoint — you
+can use object syntax. Just use the indices as object keys:
+
+```javascript
+css({
+  d: { 1: 'none' }
+})
+```
+
+```css
+@media (min-width: 400px) {
+  .__3sxrbm {
+    display: none;
+  }
+}
 ```
 
 ## Tokens & Shorthands
@@ -241,11 +280,25 @@ Which look like this when used:
 css({ appearance: 'link' }) // => { color: 'blue', textDecoration: 'underline' }
 ```
 
-## Browser Usage
+## Writing CSS
 
-Hypostyle works out-of-the-box in the browser 👍
+#### Pseudos & Nested Selectors
+
+```javascript
+const link = css({
+  color: 'black',
+  '&:hover': {
+    color: 'blue'
+  },
+  '.icon': {
+    transform: 'translateX(5px)'
+  }
+})
+```
 
 #### Global Styles
+
+Also included alongside `css` is `injectGlobal`.
 
 ```javascript
 import { hypostyle } from 'hypostyle'
@@ -262,6 +315,8 @@ injectGlobal({
 ```
 
 #### Keyframes
+
+Also also included alongside `css` is `keyframes`.
 
 ```javascript
 const { keyframes } = hypostyle(presets)
@@ -282,9 +337,13 @@ css({
 
 ## Server Usage
 
+`hypostyle` is isomorphic!
+
 ```javascript
 const { css, flush, injectGlobal } = hypostyle(presets)
+
 injectGlobal({ '*': { boxSizing: 'border-box' } })
+
 const classname = css({ c: 'primary' })
 const stylesheet = flush()
 
