@@ -248,4 +248,9 @@ const macros = {
   taj: { ta: 'justify' }
 }
 
-module.exports = { tokens, breakpoints, shorthands, macros }
+module.exports = {
+  tokens,
+  breakpoints,
+  shorthands,
+  macros
+}

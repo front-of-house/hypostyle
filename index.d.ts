@@ -12,7 +12,7 @@ export type StyleObject = CSSProperties | CSSPsuedos | {
 }
 export type HypostyleProperties = CSSPropertyNames | CSSPsuedos | string;
 export type HypostyleObject = CSSProperties | CSSPsuedos | {
-  [property in HypostyleProperties]: HypostyleObject | string | number | boolean | undefined;
+  [property in HypostyleProperties]: HypostyleObject | string | number | string[] | number[] | boolean | undefined;
 }
 
 export interface Tokens {
@@ -56,7 +56,7 @@ export type Theme = {
 
 export type Options = {}
 
-export declare function hypostyle(theme?: Theme, options?: Options): {
+export type Hypostyle = {
   css(
     props: ((tokens: Theme['tokens']) => Partial<HypostyleObject>) |
     Partial<HypostyleObject>
@@ -70,3 +70,5 @@ export declare function hypostyle(theme?: Theme, options?: Options): {
     styles: HypostyleObject;
   };
 }
+
+export function hypostyle(theme?: Theme, options?: Options): Hypostyle
