@@ -272,7 +272,7 @@ export default (test, assert) => {
   test('css as a function', () => {
     const { css, flush } = hypostyle(defaults)
 
-    css(tokens => ({ fs: tokens.fontSize[1] }))
+    css(theme => ({ fs: theme.tokens.fontSize[1] }))
 
     const sheet = flush()
 
