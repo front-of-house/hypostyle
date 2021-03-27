@@ -215,6 +215,24 @@ export default (test, assert) => {
     assert(styles['div > foo'].color === 'blue')
   })
 
+  test('pseudo elements', () => {
+    const { css, flush } = hypostyle(defaults)
+
+    css({
+      '&::after': {
+        content: '"a"'
+      },
+      '&::before': {
+        content: '"b"'
+      }
+    })
+
+    const sheet = flush()
+
+    assert(/content:"a"/.test(sheet))
+    assert(/content:"b"/.test(sheet))
+  })
+
   test('pick', () => {
     const { pick } = hypostyle({
       tokens,
