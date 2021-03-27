@@ -78,6 +78,17 @@ export default (test, assert) => {
     assert(styles.paddingTop === '4px')
   })
 
+  test('negative values', () => {
+    const { css, flush } = hypostyle(defaults)
+
+    css({
+      mt: -2
+    })
+    const sheet = flush()
+
+    assert(/-2px/.test(sheet) === true)
+  })
+
   test('can merge theme', () => {
     const { style } = hypostyle({
       tokens: {
