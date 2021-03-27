@@ -20,7 +20,7 @@ const o = hypostyle({
   }
 })
 
-o.css(tokens => ({
-  c: tokens.color.primary,
+o.css(theme => ({
+  c: theme.tokens.color.primary,
   mx: [2, 4]
 }))

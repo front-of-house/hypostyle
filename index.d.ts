@@ -58,7 +58,7 @@ export type Options = {}
 
 export type Hypostyle = {
   css(
-    props: ((tokens: Theme['tokens']) => Partial<HypostyleObject>) |
+    props: ((theme: Theme) => Partial<HypostyleObject>) |
     Partial<HypostyleObject>
   ): string;
   injectGlobal(props: Partial<HypostyleObject>): any;
