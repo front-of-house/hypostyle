@@ -8,7 +8,9 @@
     "index.js",
     "index.d.ts",
     "presets.js",
-    "presets.d.ts"
+    "presets.d.ts",
+    "utils.js",
+    "utils.d.ts"
   ],
   "scripts": {
     "test": "node -r esm test",
