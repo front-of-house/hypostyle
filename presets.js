@@ -35,6 +35,9 @@ const shorthands = {
   d: {
     properties: ['display']
   },
+  pos: {
+    properties: ['position']
+  },
   top: {
     properties: ['top'],
     token: 'space',
@@ -64,11 +67,6 @@ const shorthands = {
     properties: ['height'],
     unit: percOrPx
   },
-  mw: {
-    properties: ['maxWidth'],
-    token: 'width',
-    unit: percOrPx
-  },
   c: {
     properties: ['color'],
     token: 'color'
@@ -89,6 +87,9 @@ const shorthands = {
   o: {
     properties: ['order'],
     unit: str
+  },
+  fd: {
+    properties: ['flexDirection']
   },
   m: {
     properties: ['marginTop', 'marginBottom', 'marginLeft', 'marginRight'],
@@ -188,15 +189,16 @@ const shorthands = {
 }
 
 shorthands.display = shorthands.d
+shorthands.position = shorthands.pos
 shorthands.width = shorthands.w
 shorthands.height = shorthands.h
-shorthands.maxWidth = shorthands.mw
 shorthands.color = shorthands.c
 shorthands.background = shorthands.bg
 shorthands.flexWrap = shorthands.fw
 shorthands.alignItems = shorthands.ai
 shorthands.justifyContent = shorthands.jc
 shorthands.order = shorthands.o
+shorthands.flexDirection = shorthands.fd
 shorthands.margin = shorthands.m
 shorthands.marginTop = shorthands.mt
 shorthands.marginBottom = shorthands.mb
@@ -245,7 +247,10 @@ const macros = {
   h: { h: 1 },
   tac: { ta: 'center' },
   tar: { ta: 'right' },
-  taj: { ta: 'justify' }
+  taj: { ta: 'justify' },
+  ma: { m: 'auto' },
+  mxa: { mx: 'auto' },
+  mya: { my: 'auto' }
 }
 
 module.exports = {
