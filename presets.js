@@ -1,3 +1,5 @@
+const { px, str, percOrPx } = require('./utils')
+
 const tokens = {
   space: [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64],
   fontSize: ['3rem', '3rem', '2.2rem', '1.8rem', '1.4rem', '1rem', '0.875rem'],
@@ -18,18 +20,6 @@ const tokens = {
 }
 
 const breakpoints = ['400px', '800px', '1200px']
-
-function px (v) {
-  return typeof v === 'number' ? v + 'px' : v
-}
-
-function str (v) {
-  return v + ''
-}
-
-function percOrPx (v) {
-  return typeof v === 'number' ? (v <= 1 ? v * 100 + '%' : v + 'px') : v
-}
 
 const shorthands = {
   d: {
