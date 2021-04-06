@@ -149,6 +149,9 @@ function hypostyle (theme = {}, config = {}) {
     },
     pick (props) {
       return pick(props, t)
+    },
+    get theme () {
+      return t
     }
   }
 }
