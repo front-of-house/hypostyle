@@ -14,6 +14,8 @@ export type HypostyleProperties = CSSPropertyNames | CSSPsuedos | string;
 export type HypostyleObject = CSSProperties | CSSPsuedos | {
   [property in HypostyleProperties]: HypostyleObject | string | number | string[] | number[] | boolean | undefined;
 }
+export type HypostyleObjectOrFunction = ((theme: Theme) => Partial<HypostyleObject>) |
+    Partial<HypostyleObject>
 
 export interface Tokens {
   color?: StringKeyValue | string[];
@@ -57,18 +59,16 @@ export type Theme = {
 export type Options = {}
 
 export type Hypostyle = {
-  css(
-    props: ((theme: Theme) => Partial<HypostyleObject>) |
-    Partial<HypostyleObject>
-  ): string;
+  css(props: HypostyleObjectOrFunction): string;
   injectGlobal(props: Partial<HypostyleObject>): any;
   keyframes: KeyframesAddon['keyframes'];
   flush(): string;
-  style(props: Partial<HypostyleObject>): StyleObject;
+  style(props: HypostyleObjectOrFunction): StyleObject;
   pick(props: Partial<HypostyleObject>): {
     props: AnyKeyValue;
     styles: HypostyleObject;
   };
+  theme: Theme;
 }
 
 export function hypostyle(theme?: Theme, options?: Options): Hypostyle
