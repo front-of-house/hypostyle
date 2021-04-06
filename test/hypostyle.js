@@ -112,6 +112,16 @@ export default (test, assert) => {
     assert(styles.paddingTop === '4px')
   })
 
+  test('style as a function', () => {
+    const { style, theme } = hypostyle(defaults)
+
+    const styles = style(theme => ({
+      fs: theme.tokens.fontSize[1]
+    }))
+
+    assert(styles.fontSize === theme.tokens.fontSize[1])
+  })
+
   test('negative values', () => {
     const { css, flush } = hypostyle(defaults)
 

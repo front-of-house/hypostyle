@@ -145,7 +145,8 @@ function hypostyle (theme = {}, config = {}) {
       return raw
     },
     style (props) {
-      return style(props, t)
+      const p = typeof props === 'function' ? props(t) : props
+      return style(p, t)
     },
     pick (props) {
       return pick(props, t)
