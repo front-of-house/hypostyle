@@ -6,6 +6,8 @@ const { addon: rule } = require('nano-css/addon/rule')
 const { addon: globalAddon } = require('nano-css/addon/global')
 const { addon: hydrate } = require('nano-css/addon/hydrate')
 
+const defaultCssProps = require('./props')
+
 function parse (obj, theme) {
   const styles = {}
 
@@ -105,10 +107,13 @@ function hypostyle (theme = {}, config = {}) {
   const t = {
     tokens: {},
     breakpoints: [],
-    shorthands: {},
     macros: {},
     variants: {},
-    ...theme
+    ...theme,
+    shorthands: {
+      ...defaultCssProps,
+      ...(theme.shorthands || {})
+    }
   }
 
   const addons = [cache, nesting, keyframes, rule, globalAddon, hydrate].concat(

@@ -1,12 +1,32 @@
 import { hypostyle } from '../index'
+import defaultCssProps from '../props'
 import * as defaults from '../presets'
 
 const { tokens, shorthands, macros } = defaults
-const { css, style, flush } = hypostyle(defaults)
 
 export default (test, assert) => {
+  for (const key of Object.keys(defaultCssProps)) {
+    test(`props - ${key}`, () => {
+      const { style } = hypostyle(defaults)
+
+      const { unit, properties, token: scale } = defaultCssProps[key]
+      const rawValue = 0
+      const themeScale = tokens[scale]
+      const themeValue = themeScale ? themeScale[rawValue] : rawValue
+      const parsedValue = unit ? unit(themeValue) : themeValue
+
+      const styles = style({ [key]: rawValue })
+
+      for (const property of properties) {
+        assert.deepEqual(styles[property], parsedValue)
+      }
+    })
+  }
+
   for (const key of Object.keys(shorthands)) {
     test(`shorthands - ${key}`, () => {
+      const { style } = hypostyle(defaults)
+
       const { unit, properties, token: scale } = shorthands[key]
       const rawValue = 0
       const themeScale = tokens[scale]
@@ -23,6 +43,8 @@ export default (test, assert) => {
 
   for (const key of Object.keys(macros)) {
     test(`macro - ${key}`, () => {
+      const { style } = hypostyle(defaults)
+
       const rawStyles = style(macros[key])
       const styles = style({ [key]: true })
 
@@ -31,12 +53,16 @@ export default (test, assert) => {
   }
 
   test('no styles, empty', () => {
+    const { css } = hypostyle(defaults)
+
     const cn = css({})
 
     assert.equal('', cn)
   })
 
   test('works on arbitrary props', () => {
+    const { style } = hypostyle(defaults)
+
     const styles = style({
       borderBottomRightRadius: '4px'
     })
@@ -45,6 +71,8 @@ export default (test, assert) => {
   })
 
   test('non-theme matched', () => {
+    const { style } = hypostyle(defaults)
+
     const styles = style({
       c: 'other'
     })
@@ -53,6 +81,8 @@ export default (test, assert) => {
   })
 
   test('prop with scale and provided value', () => {
+    const { style } = hypostyle(defaults)
+
     const styles = style({
       w: '50%'
     })
@@ -61,6 +91,8 @@ export default (test, assert) => {
   })
 
   test('percentOrPixel heuristic', () => {
+    const { style } = hypostyle(defaults)
+
     const styles = style({
       w: 5,
       h: 1 / 2
@@ -71,6 +103,8 @@ export default (test, assert) => {
   })
 
   test('px heuristic', () => {
+    const { style } = hypostyle(defaults)
+
     const styles = style({
       pt: '4px'
     })
@@ -196,6 +230,8 @@ export default (test, assert) => {
   })
 
   test('pseudo and other selectors', () => {
+    const { style } = hypostyle(defaults)
+
     const styles = style({
       ':hover': {
         c: 'blue',
@@ -260,6 +296,8 @@ export default (test, assert) => {
   })
 
   test('css', () => {
+    const { css } = hypostyle(defaults)
+
     const cx = css({ c: 'blue' })
     const cx2 = css({ c: 'blue' })
     assert(typeof cx === 'string')
@@ -267,7 +305,7 @@ export default (test, assert) => {
   })
 
   test('flush', () => {
-    flush() // clear
+    const { css, flush } = hypostyle(defaults)
     const cn = css({ c: 'blue' }).trim() // remove spaces
     const sheet = flush()
     assert(new RegExp(cn).test(sheet))
@@ -281,7 +319,7 @@ export default (test, assert) => {
   })
 
   test('keyframes', () => {
-    const { keyframes, flush } = hypostyle()
+    const { css, keyframes, flush } = hypostyle(defaults)
     const animation = keyframes({
       '0%': {
         transform: 'rotate(0deg)'

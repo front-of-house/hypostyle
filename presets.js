@@ -1,4 +1,5 @@
-const { px, str, percOrPx } = require('./utils')
+const props = require('./props')
+const { px } = require('./utils')
 
 const tokens = {
   space: [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64],
@@ -22,90 +23,17 @@ const tokens = {
 const breakpoints = ['400px', '800px', '1200px']
 
 const shorthands = {
-  d: {
-    properties: ['display']
-  },
-  pos: {
-    properties: ['position']
-  },
-  top: {
-    properties: ['top'],
-    token: 'space',
-    unit: px
-  },
-  bottom: {
-    properties: ['bottom'],
-    token: 'space',
-    unit: px
-  },
-  left: {
-    properties: ['left'],
-    token: 'space',
-    unit: px
-  },
-  right: {
-    properties: ['right'],
-    token: 'space',
-    unit: px
-  },
-  w: {
-    properties: ['width'],
-    token: 'width',
-    unit: percOrPx
-  },
-  h: {
-    properties: ['height'],
-    unit: percOrPx
-  },
-  c: {
-    properties: ['color'],
-    token: 'color'
-  },
-  bg: {
-    properties: ['background'],
-    token: 'color'
-  },
-  fw: {
-    properties: ['flexWrap']
-  },
-  ai: {
-    properties: ['alignItems']
-  },
-  jc: {
-    properties: ['justifyContent']
-  },
-  o: {
-    properties: ['order'],
-    unit: str
-  },
-  fd: {
-    properties: ['flexDirection']
-  },
-  m: {
-    properties: ['marginTop', 'marginBottom', 'marginLeft', 'marginRight'],
-    token: 'space',
-    unit: px
-  },
-  mt: {
-    properties: ['marginTop'],
-    token: 'space',
-    unit: px
-  },
-  mb: {
-    properties: ['marginBottom'],
-    token: 'space',
-    unit: px
-  },
-  ml: {
-    properties: ['marginLeft'],
-    token: 'space',
-    unit: px
-  },
-  mr: {
-    properties: ['marginRight'],
-    token: 'space',
-    unit: px
-  },
+  d: props.display,
+  pos: props.position,
+  w: props.width,
+  h: props.height,
+  c: props.color,
+  bg: props.background,
+  m: props.margin,
+  mt: props.marginTop,
+  mb: props.marginBottom,
+  ml: props.marginLeft,
+  mr: props.marginRight,
   my: {
     properties: ['marginTop', 'marginBottom'],
     token: 'space',
@@ -116,31 +44,11 @@ const shorthands = {
     token: 'space',
     unit: px
   },
-  p: {
-    properties: ['paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight'],
-    token: 'space',
-    unit: px
-  },
-  pt: {
-    properties: ['paddingTop'],
-    token: 'space',
-    unit: px
-  },
-  pb: {
-    properties: ['paddingBottom'],
-    token: 'space',
-    unit: px
-  },
-  pl: {
-    properties: ['paddingLeft'],
-    token: 'space',
-    unit: px
-  },
-  pr: {
-    properties: ['paddingRight'],
-    token: 'space',
-    unit: px
-  },
+  p: props.padding,
+  pt: props.paddingTop,
+  pb: props.paddingBottom,
+  pl: props.paddingLeft,
+  pr: props.paddingRight,
   py: {
     properties: ['paddingTop', 'paddingBottom'],
     token: 'space',
@@ -151,75 +59,27 @@ const shorthands = {
     token: 'space',
     unit: px
   },
-  z: {
-    properties: ['zIndex'],
-    token: 'zIndex',
-    unit: str
-  },
-  fs: {
-    properties: ['fontSize'],
-    token: 'fontSize'
-  },
-  ff: {
-    properties: ['fontFamily'],
-    token: 'fontFamily'
-  },
-  fe: {
-    properties: ['fontWeight'],
-    token: 'fontWeight',
-    unit: str
-  },
-  ta: {
-    properties: ['textAlign']
-  },
-  lh: {
-    properties: ['lineHeight'],
-    token: 'lineHeight'
-  }
+  z: props.zIndex,
+  fs: props.fontSize,
+  fw: props.fontWeight,
+  lh: props.lineHeight,
+  ta: props.textAlign
 }
-
-shorthands.display = shorthands.d
-shorthands.position = shorthands.pos
-shorthands.width = shorthands.w
-shorthands.height = shorthands.h
-shorthands.color = shorthands.c
-shorthands.background = shorthands.bg
-shorthands.flexWrap = shorthands.fw
-shorthands.alignItems = shorthands.ai
-shorthands.justifyContent = shorthands.jc
-shorthands.order = shorthands.o
-shorthands.flexDirection = shorthands.fd
-shorthands.margin = shorthands.m
-shorthands.marginTop = shorthands.mt
-shorthands.marginBottom = shorthands.mb
-shorthands.marginLeft = shorthands.ml
-shorthands.marginRight = shorthands.mr
-shorthands.padding = shorthands.p
-shorthands.paddingTop = shorthands.pt
-shorthands.paddingBottom = shorthands.pb
-shorthands.paddingLeft = shorthands.pl
-shorthands.paddingRight = shorthands.pr
-shorthands.zIndex = shorthands.z
-shorthands.fontSize = shorthands.fs
-shorthands.fontFamily = shorthands.ff
-shorthands.fontWeight = shorthands.fe
-shorthands.textAlign = shorthands.ta
-shorthands.lineHeight = shorthands.lh
 
 const macros = {
   db: { d: 'block' },
   dib: { d: 'inline-block' },
   di: { d: 'inline' },
   f: { d: 'flex' },
-  fw: { fw: 'wrap' },
-  ais: { ai: 'flex-start' },
-  aic: { ai: 'center' },
-  aie: { ai: 'flex-end' },
-  jcs: { jc: 'flex-start' },
-  jcc: { jc: 'center' },
-  jce: { jc: 'flex-end' },
-  jca: { jc: 'space-around' },
-  jcb: { jc: 'space-between' },
+  fw: { flexWrap: 'wrap' },
+  ais: { alignItems: 'flex-start' },
+  aic: { alignItems: 'center' },
+  aie: { alignItems: 'flex-end' },
+  jcs: { justifyContent: 'flex-start' },
+  jcc: { justifyContent: 'center' },
+  jce: { justifyContent: 'flex-end' },
+  jca: { justifyContent: 'space-around' },
+  jcb: { justifyContent: 'space-between' },
   rel: { position: 'relative' },
   abs: { position: 'absolute' },
   fix: { position: 'fixed' },
