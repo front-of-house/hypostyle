@@ -10,7 +10,8 @@
     "presets.js",
     "presets.d.ts",
     "utils.js",
-    "utils.d.ts"
+    "utils.d.ts",
+    "props.js"
   ],
   "scripts": {
     "test": "node -r esm test",
