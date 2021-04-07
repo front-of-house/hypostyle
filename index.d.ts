@@ -2,47 +2,43 @@ import { Properties as CSSProperties, Pseudos as CSSPsuedos } from 'csstype';
 import { KeyframesAddon } from 'nano-css/addon/keyframes'
 
 type Unitless = string | number;
-type StringKeyValue = { [name: string]: string }
 type UnitlessKeyValue = { [name: string]: Unitless }
 type AnyKeyValue = { [name: string]: any }
 type CSSPropertyNames = keyof CSSProperties
+type HTMLTagNames = keyof HTMLElementTagNameMap
 
-export type StyleObject = CSSProperties | CSSPsuedos | {
+export type StyleObject = CSSProperties | CSSPsuedos | HTMLTagNames | {
   [property: string]: StyleObject;
 }
-export type HypostyleProperties = CSSPropertyNames | CSSPsuedos | string;
-export type HypostyleObject = CSSProperties | CSSPsuedos | {
-  [property in HypostyleProperties]: HypostyleObject | string | number | string[] | number[] | boolean | undefined;
+export type HypostyleProperties = CSSPropertyNames & CSSPsuedos & HTMLTagNames & string;
+export type HypostyleResponsiveObject = { [k: number]: Unitless }
+export type HypostyleObject = {
+  [property in HypostyleProperties]: HypostyleObject | HypostyleResponsiveObject | string | number | string[] | number[] | boolean | undefined;
 }
-export type HypostyleObjectOrFunction = ((theme: Theme) => Partial<HypostyleObject>) |
-    Partial<HypostyleObject>
+export type HypostyleObjectOrFunction = ((theme: Theme) => HypostyleObject) | HypostyleObject
 
-export interface Tokens {
-  color?: StringKeyValue | string[];
-  space?: Unitless[] | UnitlessKeyValue;
-  width?: UnitlessKeyValue | Unitless[];
-  zIndex?: Unitless[] | UnitlessKeyValue;
-  fontSize?: string[] | StringKeyValue;
-  fontFamily?: StringKeyValue;
-  fontWeight?: Unitless[] | UnitlessKeyValue;
-  lineHeight?: Unitless[] | UnitlessKeyValue;
+export type Tokens = {
+  [property in CSSPropertyNames]?: Unitless | Unitless[] | UnitlessKeyValue;
 }
 
-export interface Shorthands {
-  [shorthand: string]: {
-    properties: CSSPropertyNames[];
-    token?: keyof Tokens;
-    unit?: (v: any) => string;
-  }
+export type Shorthands = {
+  [shorthand: string]: CSSPropertyNames | CSSPropertyNames[];
 }
 
-export interface Macros {
+export type Macros = {
   [macro: string]: HypostyleObject;
 }
 
-export interface Variants {
+export type Variants = {
   [variation: string]: {
     [name: string]: HypostyleObject;
+  }
+}
+
+export type CSSProps = {
+  [property in CSSPropertyNames]?: {
+    token?: keyof Tokens;
+    unit?(value: any): string;
   }
 }
 
@@ -54,20 +50,22 @@ export type Theme = {
   shorthands?: Shorthands;
   macros?: Macros;
   variants?: Variants;
+  properties?: CSSProps;
 } & UserTheme
 
 export type Options = {}
 
 export type Hypostyle = {
-  css(props: HypostyleObjectOrFunction): string;
-  injectGlobal(props: Partial<HypostyleObject>): any;
-  keyframes: KeyframesAddon['keyframes'];
-  flush(): string;
+  explode(props: HypostyleObjectOrFunction): HypostyleObject;
   style(props: HypostyleObjectOrFunction): StyleObject;
-  pick(props: Partial<HypostyleObject>): {
+  css(props: HypostyleObjectOrFunction): string;
+  pick(props: HypostyleObject & AnyKeyValue): {
     props: AnyKeyValue;
     styles: HypostyleObject;
   };
+  injectGlobal(props: HypostyleObject): void;
+  keyframes: KeyframesAddon['keyframes'];
+  flush(): string;
   theme: Theme;
 }
 

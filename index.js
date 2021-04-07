@@ -6,37 +6,91 @@ const { addon: rule } = require('nano-css/addon/rule')
 const { addon: globalAddon } = require('nano-css/addon/global')
 const { addon: hydrate } = require('nano-css/addon/hydrate')
 
-const defaultCssProps = require('./props')
+const defaultCssProps = require('./properties')
 
-function parse (obj, theme) {
+function obj (o, theme) {
+  return typeof o === 'function' ? o(theme) : o
+}
+
+/**
+ * Expand macros and variants, then expand all shorthand props.
+ *
+ * Returns a hypostyle object
+ */
+function explode (props, theme) {
   const styles = {}
 
-  for (const prop of Object.keys(obj)) {
-    // if properties is undefined, the prop is some normie CSS prop
-    const { properties = [prop], token: scale, unit } =
-      theme.shorthands[prop] || {}
-    const tokens = theme.tokens[scale]
-    const rawValue = obj[prop]
+  // expand macros and variants, copy other props
+  for (const prop of Object.keys(props)) {
+    // macro exists AND prop is true
+    if (theme.macros[prop] && (props[prop] === true || props[prop] === false)) {
+      Object.assign(styles, theme.macros[prop])
+    } else if (theme.variants[prop]) {
+      Object.assign(styles, theme.variants[prop][props[prop]])
+    } else {
+      styles[prop] = props[prop]
+    }
+  }
 
-    if (typeof rawValue === 'object' && !Array.isArray(rawValue)) {
-      const rawValueKeys = Object.keys(rawValue)
+  // recursively expand all shorthands
+  for (const prop of Object.keys(styles)) {
+    const value = styles[prop]
 
-      if (/^\d/.test(rawValueKeys[0])) {
-        const newRawValue = []
+    // Could be nested object, ignore responsive array/object syntax
+    if (
+      typeof value === 'object' &&
+      !Array.isArray(value) &&
+      !/^\d/.test(Object.keys(value)[0])
+    ) {
+      styles[prop] = explode(value, theme)
+      continue
+    }
 
-        for (const key of rawValueKeys) {
-          newRawValue[key] = rawValue[key]
+    if (theme.shorthands[prop]) {
+      for (const p of [].concat(theme.shorthands[prop])) {
+        styles[p] = value
+      }
+
+      delete styles[prop] // remove shorthand key
+    } else {
+      styles[prop] = value
+    }
+  }
+
+  return styles
+}
+
+/**
+ * Accepts a hypostyle object and converts it to a CSS object intelligible by
+ * any CSS-in-JS library that supports objects.
+ */
+function style (props, theme) {
+  const styles = {}
+
+  for (const prop of Object.keys(props)) {
+    const value = props[prop]
+    const { token, unit } = theme.properties[prop] || {}
+    const tokens = theme.tokens[token]
+
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      const keyIndicies = Object.keys(value)
+
+      // convert responsive object to array syntax
+      if (/^\d/.test(keyIndicies[0])) {
+        const arr = []
+
+        for (const i of keyIndicies) {
+          arr[i] = value[i]
         }
 
-        obj[prop] = newRawValue
+        props[prop] = arr
       } else {
-        styles[prop] = style(rawValue, theme)
+        styles[prop] = style(value, theme)
         continue // continue main loop
       }
     }
 
-    // just make all values resposive-ready
-    const values = [].concat(obj[prop])
+    const values = [].concat(props[prop])
 
     for (let i = 0; i < values.length; i++) {
       const value = values[i]
@@ -59,21 +113,27 @@ function parse (obj, theme) {
       // if someone passes a breakpoint that doesn't exist
       if (!breakpoint && i > 0) continue
 
-      for (const property of properties) {
-        s[property] = unitValue
-      }
+      s[prop] = unitValue
     }
   }
 
   return styles
 }
 
+/**
+ * Separates style props from everything else
+ */
 function pick (props, theme) {
   const styles = {}
   const extra = {}
 
   for (const prop of Object.keys(props)) {
-    if (theme.macros[prop] || theme.variants[prop] || theme.shorthands[prop]) {
+    if (
+      theme.macros[prop] ||
+      theme.variants[prop] ||
+      theme.shorthands[prop] ||
+      theme.properties[prop]
+    ) {
       styles[prop] = props[prop]
     } else {
       extra[prop] = props[prop]
@@ -86,21 +146,12 @@ function pick (props, theme) {
   }
 }
 
-function style (props, theme) {
-  const styles = {}
-
-  for (const prop of Object.keys(props)) {
-    // macro exists AND prop is true
-    if (theme.macros[prop] && (props[prop] === true || props[prop] === false)) {
-      Object.assign(styles, theme.macros[prop])
-    } else if (theme.variants[prop]) {
-      Object.assign(styles, theme.variants[prop][props[prop]])
-    } else {
-      styles[prop] = props[prop]
-    }
-  }
-
-  return parse(styles, theme)
+function createNano ({ addons }) {
+  const nano = create({
+    sh: typeof document === 'object' ? document.getElementById('hypo') : null
+  })
+  addons.map(a => a(nano))
+  return nano
 }
 
 function hypostyle (theme = {}, config = {}) {
@@ -110,8 +161,11 @@ function hypostyle (theme = {}, config = {}) {
     macros: {},
     variants: {},
     ...theme,
-    shorthands: {
+    properties: {
       ...defaultCssProps,
+      ...(theme.properties || {})
+    },
+    shorthands: {
       ...(theme.shorthands || {})
     }
   }
@@ -120,36 +174,30 @@ function hypostyle (theme = {}, config = {}) {
     config.addons || []
   )
 
-  let nano = createNano()
-
-  function createNano () {
-    const nano = create({
-      sh: typeof document === 'object' ? document.getElementById('hypo') : null
-    })
-    addons.map(a => a(nano))
-    return nano
-  }
+  let nano = createNano({ addons })
 
   return {
+    explode (props) {
+      return explode(obj(props, t), t)
+    },
+    style (props) {
+      return style(explode(obj(props, t), t), t)
+    },
     css (props) {
-      const p = typeof props === 'function' ? props(t) : props
-      return Object.keys(p).length ? nano.rule(style(p, t)) : ''
+      const styles = style(explode(obj(props, t), t), t)
+      return Object.keys(styles).length ? nano.rule(styles) : ''
+    },
+    pick (props) {
+      return pick(props, t)
     },
     injectGlobal (props) {
-      return nano.global(style(props, t))
+      nano.global(style(explode(obj(props, t), t), t))
     },
     keyframes: nano.keyframes,
     flush () {
       const raw = nano.raw
-      nano = createNano()
+      nano = createNano({ addons })
       return raw
-    },
-    style (props) {
-      const p = typeof props === 'function' ? props(t) : props
-      return style(p, t)
-    },
-    pick (props) {
-      return pick(props, t)
     },
     get theme () {
       return t
