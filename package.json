@@ -1,6 +1,6 @@
 {
   "name": "hypostyle",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Minimalist 5th Generation CSS-in-JS built for concision and extension. Fast af, powered by nano-css.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -11,7 +11,7 @@
     "presets.d.ts",
     "utils.js",
     "utils.d.ts",
-    "props.js"
+    "properties.js"
   ],
   "scripts": {
     "test": "node -r esm test",

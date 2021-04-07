@@ -1,25 +1,75 @@
 import { hypostyle } from '../index'
-import defaultCssProps from '../props'
+import defaultCssProps from '../properties'
 import * as defaults from '../presets'
 
 const { tokens, shorthands, macros } = defaults
 
 export default (test, assert) => {
+  test('explode', () => {
+    const { explode } = hypostyle({
+      shorthands: {
+        c: 'color',
+        m: ['marginTop', 'marginBottom', 'marginLeft', 'marginRight'],
+        d: 'display'
+      }
+    })
+
+    const styles = {
+      ...explode({ c: 'blue' }),
+      ...explode({ color: 'red' }),
+      ...explode({
+        div: {
+          a: {
+            c: 'tomato'
+          }
+        }
+      }),
+      ...explode({
+        m: [0, 1, 2],
+        d: { 0: 'none', 1: 'block' }
+      })
+    }
+
+    assert(styles.color === 'red')
+    assert(styles.marginTop[1] === 1)
+    assert(typeof styles.display === 'object')
+    assert(styles.div.a.color === 'tomato')
+  })
+
+  test('style', () => {
+    const { style } = hypostyle({
+      breakpoints: ['400px', '800px', '1200px'],
+      tokens: {
+        space: [0, 4, 8, 12]
+      },
+      shorthands: {
+        c: 'color',
+        m: ['marginTop', 'marginBottom', 'marginLeft', 'marginRight']
+      }
+    })
+
+    const styles = {
+      ...style({ c: 'blue' }),
+      ...style({ m: [0, 1, 2] })
+    }
+
+    assert(styles.color === 'blue')
+    assert(styles.marginTop === '0px')
+  })
+
   for (const key of Object.keys(defaultCssProps)) {
     test(`props - ${key}`, () => {
       const { style } = hypostyle(defaults)
 
-      const { unit, properties, token: scale } = defaultCssProps[key]
+      const { unit, token } = defaultCssProps[key]
       const rawValue = 0
-      const themeScale = tokens[scale]
+      const themeScale = tokens[token]
       const themeValue = themeScale ? themeScale[rawValue] : rawValue
       const parsedValue = unit ? unit(themeValue) : themeValue
 
       const styles = style({ [key]: rawValue })
 
-      for (const property of properties) {
-        assert.deepEqual(styles[property], parsedValue)
-      }
+      assert.deepEqual(styles[key], parsedValue)
     })
   }
 
@@ -27,16 +77,18 @@ export default (test, assert) => {
     test(`shorthands - ${key}`, () => {
       const { style } = hypostyle(defaults)
 
-      const { unit, properties, token: scale } = shorthands[key]
-      const rawValue = 0
-      const themeScale = tokens[scale]
-      const themeValue = themeScale ? themeScale[rawValue] : rawValue
-      const parsedValue = unit ? unit(themeValue) : themeValue
+      const properties = [].concat(shorthands[key])
 
-      const styles = style({ [key]: rawValue })
+      for (const prop of properties) {
+        const { unit, token } = defaultCssProps[prop]
+        const rawValue = 0
+        const themeScale = tokens[token]
+        const themeValue = themeScale ? themeScale[rawValue] : rawValue
+        const parsedValue = unit ? unit(themeValue) : themeValue
 
-      for (const property of properties) {
-        assert.deepEqual(styles[property], parsedValue)
+        const styles = style({ [prop]: rawValue })
+
+        assert.deepEqual(styles[prop], parsedValue)
       }
     })
   }
