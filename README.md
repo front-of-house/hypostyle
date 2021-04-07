@@ -33,23 +33,13 @@ const { css } = hypostyle({
   breakpoints: ['400px', '800px', '1200px'],
   tokens: {
     color: {
-      black: '#333',
       primary: '#ff4567'
     },
     space: [0, 4, 8, 12, 16, 20, 24, 28, 32]
   },
   shorthands: {
-    c: {
-      properties: ['color'],
-      token: 'color'
-    },
-    px: {
-      properties: ['paddingLeft', 'paddingRight'],
-      token: 'space',
-      unit (value) {
-        return value + 'px'
-      }
-    }
+    c: ['color'],
+    px: ['paddingLeft', 'paddingRight']
   }
 })
 ```
@@ -101,6 +91,7 @@ Your theme can contain the following properties:
   and (optionally) design tokens
 - `macros` - boolean properties mapped to pre-defined style objects
 - `variants` - named groups of pre-defined style objects
+- `properties` - config supported CSS properties
 
 #### Presets
 
@@ -171,8 +162,12 @@ const { css } = hypostyle({
 })
 ```
 
-Shorthands are like shortcuts that allow you to use `token` values or abbreviate
-CSS properties. The rest of the above example could look like this:
+Tokens are associated with configurable CSS properties so that you can use
+token values in your styles. By default, _most_ CSS properties are supported and
+are self referencing.
+
+Shorthands are like shortcuts that allow you to abbreviate
+CSS these properties. The rest of the above example could look like this:
 
 ```javascript
 const { css } = hypostyle({
@@ -183,51 +178,16 @@ const { css } = hypostyle({
     space: [0, 4, 8, 12, 16]
   },
   shorthands: {
-    bg: {
-      properties: ['background'],
-      token: 'color'
-    }
+    bg: 'background'
   }
 })
 ```
 
-Which can be used like this:
+Which can be used like this, because `background` is associated with the `color`
+tokens by default:
 
 ```javascript
 css({ bg: 'primary' }) // => { background: '#ff4567' }
-```
-
-Shorthands can be configured with the following props:
-
-- `properties` - an array of CSS property strings (required)
-- `token` - the name of the property on the `tokens` theme object to source design
-  tokens from (optional)
-- `unit` - a function used to process the output value, if unit conversion is
-  required (optional)
-
-For ease of use, you'll probably want to alias your shorthands as well like
-this:
-
-```javascript
-const shorthands = {
-  bg: {
-    properties: ['background'],
-    token: 'color'
-  }
-}
-
-shorthands.background = shorthands.bg
-
-const { css } = hypostyle({
-  tokens: {
-    color: {
-      primary: '#ff4557'
-    }
-  },
-  shorthands
-})
-
-css({ background: 'primary' }) // => { background: '#ff4567' }
 ```
 
 ## Macros
@@ -333,6 +293,37 @@ const animation = keyframes({
 css({
   animation: `${animation} 1s linear infinite`
 })
+```
+
+## Configuring CSS Properties
+
+Hypostyle comes with built-in support for _most_ CSS properties. To add
+additional support, have a look at the `properties.js` file for API, and pass
+your additional props to the constructor. Example:
+
+```javascript
+const hypo = hypostyle({
+  ...,
+  tokens: {
+    ...,
+    radii: ['4px', '8px']
+  },
+  shorthands: {
+    ...,
+    bTLR: 'borderTopLeftRadius'
+  },
+  properties: {
+    borderTopLeftRadius: {
+      token: 'radii'
+    }
+  }
+})
+```
+
+Usage:
+
+```javascript
+hypo.style({ bTLR: 1 }) // => { borderTopLeftRadius: '8px' }
 ```
 
 ## Server Usage

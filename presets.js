@@ -1,5 +1,4 @@
-const props = require('./props')
-const { px } = require('./utils')
+const breakpoints = ['400px', '800px', '1200px']
 
 const tokens = {
   space: [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64],
@@ -20,57 +19,38 @@ const tokens = {
   lineHeight: [1.1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6]
 }
 
-const breakpoints = ['400px', '800px', '1200px']
-
 const shorthands = {
-  d: props.display,
-  pos: props.position,
-  w: props.width,
-  h: props.height,
-  c: props.color,
-  bg: props.background,
-  m: props.margin,
-  mt: props.marginTop,
-  mb: props.marginBottom,
-  ml: props.marginLeft,
-  mr: props.marginRight,
-  my: {
-    properties: ['marginTop', 'marginBottom'],
-    token: 'space',
-    unit: px
-  },
-  mx: {
-    properties: ['marginLeft', 'marginRight'],
-    token: 'space',
-    unit: px
-  },
-  p: props.padding,
-  pt: props.paddingTop,
-  pb: props.paddingBottom,
-  pl: props.paddingLeft,
-  pr: props.paddingRight,
-  py: {
-    properties: ['paddingTop', 'paddingBottom'],
-    token: 'space',
-    unit: px
-  },
-  px: {
-    properties: ['paddingLeft', 'paddingRight'],
-    token: 'space',
-    unit: px
-  },
-  z: props.zIndex,
-  fs: props.fontSize,
-  fw: props.fontWeight,
-  lh: props.lineHeight,
-  ta: props.textAlign
+  d: 'display',
+  w: 'width',
+  h: 'height',
+  c: 'color',
+  bg: 'background',
+  m: ['marginTop', 'marginBottom', 'marginLeft', 'marginRight'],
+  mt: 'marginTop',
+  mb: 'marginBottom',
+  ml: 'marginLeft',
+  mr: 'marginRight',
+  my: ['marginTop', 'marginBottom'],
+  mx: ['marginLeft', 'marginRight'],
+  p: ['paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight'],
+  pt: 'paddingTop',
+  pb: 'paddingBottom',
+  pl: 'paddingLeft',
+  pr: 'paddingRight',
+  py: ['paddingTop', 'paddingBottom'],
+  px: ['paddingLeft', 'paddingRight'],
+  z: 'zIndex',
+  fs: 'fontSize',
+  fw: 'fontWeight',
+  lh: 'lineHeight',
+  ta: 'textAlign'
 }
 
 const macros = {
-  db: { d: 'block' },
-  dib: { d: 'inline-block' },
-  di: { d: 'inline' },
-  f: { d: 'flex' },
+  db: { display: 'block' },
+  dib: { display: 'inline-block' },
+  di: { display: 'inline' },
+  f: { display: 'flex' },
   fw: { flexWrap: 'wrap' },
   ais: { alignItems: 'flex-start' },
   aic: { alignItems: 'center' },
@@ -93,19 +73,19 @@ const macros = {
     left: 0,
     right: 0
   },
-  w: { w: 1 },
-  h: { h: 1 },
-  tac: { ta: 'center' },
-  tar: { ta: 'right' },
-  taj: { ta: 'justify' },
+  w: { width: 1 },
+  h: { height: 1 },
+  tac: { textAlign: 'center' },
+  tar: { textAlign: 'right' },
+  taj: { textAlign: 'justify' },
   ma: { m: 'auto' },
   mxa: { mx: 'auto' },
   mya: { my: 'auto' }
 }
 
 module.exports = {
-  tokens,
   breakpoints,
+  tokens,
   shorthands,
   macros
 }
