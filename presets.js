@@ -41,6 +41,7 @@ const shorthands = {
   px: ['paddingLeft', 'paddingRight'],
   z: 'zIndex',
   fs: 'fontSize',
+  ff: 'fontFamily',
   fw: 'fontWeight',
   lh: 'lineHeight',
   ta: 'textAlign'
