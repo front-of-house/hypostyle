@@ -53,6 +53,6 @@
   },
   "dependencies": {
     "csstype": "^3.0.6",
-    "nano-css": "^5.3.1"
+    "nano-css": "estrattonbailey/nano-css"
   }
 }

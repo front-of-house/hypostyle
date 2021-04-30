@@ -462,4 +462,17 @@ export default (test, assert) => {
 
     assert(/@media\s\(min-width: 567px\)/.test(sheet) === true)
   })
+
+  test('prefix', () => {
+    const { css, flush } = hypostyle(defaults, { prefix: 'hypo' })
+
+    css({
+      '@media (min-width: 567px)': {
+        color: 'tomato'
+      }
+    })
+    const sheet = flush()
+
+    assert(/hypo/.test(sheet) === true)
+  })
 }

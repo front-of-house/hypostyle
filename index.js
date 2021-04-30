@@ -146,8 +146,9 @@ function pick (props, theme) {
   }
 }
 
-function createNano ({ addons }) {
+function createNano ({ addons, prefix = '_' }) {
   const nano = create({
+    pfx: prefix,
     sh: typeof document === 'object' ? document.getElementById('hypo') : null
   })
   addons.map(a => a(nano))
@@ -174,7 +175,7 @@ function hypostyle (theme = {}, config = {}) {
     config.addons || []
   )
 
-  let nano = createNano({ addons })
+  let nano = createNano({ addons, prefix: config.prefix })
 
   return {
     explode (props) {
