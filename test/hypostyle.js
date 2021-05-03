@@ -104,6 +104,22 @@ export default (test, assert) => {
     })
   }
 
+  test('macro - falsy', () => {
+    const { css, flush } = hypostyle({
+      macros: {
+        b: {
+          color: 'blue'
+        }
+      }
+    })
+
+    css({ color: 'tomato', b: true })
+    assert(/color:blue/.test(flush()))
+
+    css({ color: 'tomato', b: false })
+    assert(/color:tomato/.test(flush()))
+  })
+
   test('no styles, empty', () => {
     const { css } = hypostyle(defaults)
 

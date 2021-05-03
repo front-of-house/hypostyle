@@ -24,7 +24,7 @@ function explode (props, theme) {
   for (const prop of Object.keys(props)) {
     // macro exists AND prop is true
     if (theme.macros[prop] && (props[prop] === true || props[prop] === false)) {
-      Object.assign(styles, theme.macros[prop])
+      if (props[prop] === true) Object.assign(styles, theme.macros[prop])
     } else if (theme.variants[prop]) {
       Object.assign(styles, theme.variants[prop][props[prop]])
     } else {
