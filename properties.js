@@ -49,6 +49,12 @@ module.exports = {
   background: {
     token: 'color'
   },
+  backgroundColor: {
+    token: 'color'
+  },
+  backgroundImage: {},
+  backgroundRepeat: {},
+  backgroundSize: {},
   opacity: {},
   flex: {},
   flexWrap: {},
