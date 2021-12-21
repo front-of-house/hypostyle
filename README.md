@@ -1,6 +1,6 @@
 # hypostyle
 
-[![npm version](https://img.shields.io/npm/v/hypostyle?style=flat&colorA=4488FF&colorB=4488FF)](https://www.npmjs.com/package/hypostyle) [![test coverage](https://img.shields.io/coveralls/github/sure-thing/hypostyle?style=flat&colorA=223355&colorB=223355)](https://coveralls.io/github/sure-thing/hypostyle?branch=main) [![npm bundle size](https://badgen.net/bundlephobia/min/hypostyle?color=223355&labelColor=223355)](https://bundlephobia.com/result?p=hypostyle)
+[![npm version](https://img.shields.io/npm/v/hypostyle?style=flat&colorA=4488FF&colorB=4488FF)](https://www.npmjs.com/package/hypostyle) [![test coverage](https://img.shields.io/coveralls/github/sure-thing/hypostyle?style=flat&colorA=223355&colorB=223355)](https://coveralls.io/github/sure-thing/hypostyle?branch=main) [![npm bundle size](https://badgen.net/bundlephobia/minzip/hypostyle?color=223355&labelColor=223355)](https://bundlephobia.com/result?p=hypostyle)
 
 Minimalist [5th
 Generation](https://github.com/streamich/freestyler/blob/master/docs/en/generations.md#5th-generation)
