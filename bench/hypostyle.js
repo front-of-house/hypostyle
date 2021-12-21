@@ -1,5 +1,5 @@
-const presets = require('../presets')
-const { hypostyle } = require('../')
+const presets = require('../dist/presets')
+const { hypostyle } = require('../dist')
 
 const hypo = hypostyle(presets)
 
