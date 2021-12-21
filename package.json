@@ -1,6 +1,6 @@
 {
   "name": "hypostyle",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Minimalist 5th Generation CSS-in-JS built for concision and extension. Fast af, powered by nano-css.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
