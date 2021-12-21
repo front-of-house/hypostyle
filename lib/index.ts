@@ -156,9 +156,14 @@ function style(props: HypostyleObject, theme: Theme): CssLikeObject {
 
         props[prop] = arr
       } else {
-        // continue, nested style object
-        styles[prop] = style(mixedObject, theme)
-        continue // continue main loop
+        /*
+         * Safely merge in nested prop — there may be duplicate keys, like
+         * after shorthand expansion or a custom media query block
+         */
+        var nested = {}
+        nested[prop] = style(mixedObject, theme)
+        merge(styles, nested)
+        continue // continue, nested style object
       }
     }
 

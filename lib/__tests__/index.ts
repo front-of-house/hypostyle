@@ -393,7 +393,7 @@ test('flush', () => {
 })
 
 test('injectGlobal', () => {
-  const { injectGlobal, flush } = hypostyle()
+  const { injectGlobal, flush } = hypostyle({})
   injectGlobal({ html: { color: 'blue' } })
   const sheet = flush()
   assert.ok(sheet.includes('color:blue'))
@@ -493,6 +493,25 @@ test('prefix', () => {
   const sheet = flush()
 
   assert.equal(/hypo/.test(sheet), true)
+})
+
+/**
+ * @see https://github.com/sure-thing/hypostyle/issues/7
+ */
+test('issue #7', async () => {
+  const { style } = hypostyle(defaults)
+
+  const styles = style({
+    color: ['blue', 'red'],
+    [`@media (min-width: ${defaults.breakpoints[0]})`]: {
+      background: 'tomato',
+    },
+  })
+
+  assert.equal(styles, {
+    color: 'blue',
+    '@media (min-width: 400px)': { color: 'red', background: 'tomato' },
+  })
 })
 
 test.run()
