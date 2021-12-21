@@ -5,6 +5,6 @@
     "lib": ["ES5", "dom"],
     "target": "ES5",
     "declaration": true,
-    "declarationDir": "./dist"
+    "declarationDir": "./"
   }
 }

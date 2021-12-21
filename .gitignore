@@ -5,3 +5,10 @@ dist
 .nyc_output
 .pnpm*
 coverage
+
+# built files
+index.js
+presets.js
+index.d.ts
+presets.d.ts
+properties.d.ts

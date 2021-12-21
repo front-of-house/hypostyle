@@ -2,11 +2,8 @@
   "name": "hypostyle",
   "version": "3.2.1",
   "description": "Minimalist 5th Generation CSS-in-JS built for concision and extension. Fast af, powered by nano-css.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "prepare": "is-ci || pnpx husky install",
     "test": "c8 node -r esbuild-register lib/__tests__/index.ts",
