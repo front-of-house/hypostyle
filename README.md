@@ -1,8 +1,6 @@
-![hypostyle](https://user-images.githubusercontent.com/4732330/102666621-09f0df00-414d-11eb-9178-9d46f113ea46.png)
+# hypostyle
 
-<br/>
-
-![npm](https://img.shields.io/npm/v/hypostyle) [![](https://badgen.net/bundlephobia/minzip/hypostyle)](https://bundlephobia.com/result?p=hypostyle)
+[![npm version](https://img.shields.io/npm/v/hypostyle?style=flat&colorA=4488FF&colorB=4488FF)](https://www.npmjs.com/package/hypostyle) [![test coverage](https://img.shields.io/coveralls/github/sure-thing/hypostyle?style=flat&colorA=223355&colorB=223355)](https://coveralls.io/github/sure-thing/hypostyle?branch=main) [![npm bundle size](https://badgen.net/bundlephobia/min/hypostyle?color=223355&labelColor=223355)](https://bundlephobia.com/result?p=hypostyle)
 
 Minimalist [5th
 Generation](https://github.com/streamich/freestyler/blob/master/docs/en/generations.md#5th-generation)
@@ -33,14 +31,14 @@ const { css } = hypostyle({
   breakpoints: ['400px', '800px', '1200px'],
   tokens: {
     color: {
-      primary: '#ff4567'
+      primary: '#ff4567',
     },
-    space: [0, 4, 8, 12, 16, 20, 24, 28, 32]
+    space: [0, 4, 8, 12, 16, 20, 24, 28, 32],
   },
   shorthands: {
     c: ['color'],
-    px: ['paddingLeft', 'paddingRight']
-  }
+    px: ['paddingLeft', 'paddingRight'],
+  },
 })
 ```
 
@@ -49,10 +47,10 @@ const { css } = hypostyle({
 ```javascript
 const classname = css({
   c: 'primary',
-  px: [4, 8]
+  px: [4, 8],
 })
 
-function Component () {
+function Component() {
   return <div className={classname} />
 }
 ```
@@ -113,7 +111,7 @@ remaining values are convered into `@media` breakpoints.
 
 ```javascript
 css({
-  d: ['block', 'none']
+  d: ['block', 'none'],
 })
 ```
 
@@ -135,7 +133,7 @@ can use object syntax. Just use the indices as object keys:
 
 ```javascript
 css({
-  d: { 1: 'none' }
+  d: { 1: 'none' },
 })
 ```
 
@@ -155,10 +153,10 @@ Tokens are either objects of named values, or arrays (scales) of values.
 const { css } = hypostyle({
   tokens: {
     color: {
-      primary: '#ff4557'
+      primary: '#ff4557',
     },
-    space: [0, 4, 8, 12, 16]
-  }
+    space: [0, 4, 8, 12, 16],
+  },
 })
 ```
 
@@ -173,13 +171,13 @@ CSS these properties. The rest of the above example could look like this:
 const { css } = hypostyle({
   tokens: {
     color: {
-      primary: '#ff4557'
+      primary: '#ff4557',
     },
-    space: [0, 4, 8, 12, 16]
+    space: [0, 4, 8, 12, 16],
   },
   shorthands: {
-    bg: 'background'
-  }
+    bg: 'background',
+  },
 })
 ```
 
@@ -198,8 +196,8 @@ style objects can use any shorthands or tokens you have configured.
 ```javascript
 const { css } = hypostyle({
   macros: {
-    cover: { top: 0, bottom: 0, left: 0, right: 0 }
-  }
+    cover: { top: 0, bottom: 0, left: 0, right: 0 },
+  },
 })
 
 css({ cover: true }) // => { top: 0, bottom: 0, ... }
@@ -227,10 +225,10 @@ const { css } = hypostyle({
     appearance: {
       link: {
         c: 'blue',
-        textDecoration: 'underline'
-      }
-    }
-  }
+        textDecoration: 'underline',
+      },
+    },
+  },
 })
 ```
 
@@ -248,11 +246,11 @@ css({ appearance: 'link' }) // => { color: 'blue', textDecoration: 'underline' }
 const link = css({
   color: 'black',
   '&:hover': {
-    color: 'blue'
+    color: 'blue',
   },
   '.icon': {
-    transform: 'translateX(5px)'
-  }
+    transform: 'translateX(5px)',
+  },
 })
 ```
 
@@ -269,8 +267,8 @@ const { injectGlobal } = hypostyle(presets)
 injectGlobal({
   'html, body': {
     c: '#333',
-    boxSizing: 'border-box'
-  }
+    boxSizing: 'border-box',
+  },
 })
 ```
 
@@ -283,15 +281,15 @@ const { keyframes } = hypostyle(presets)
 
 const animation = keyframes({
   '0%': {
-    opacity: 0
+    opacity: 0,
   },
   '100%': {
-    opacity: 1
-  }
+    opacity: 1,
+  },
 })
 
 css({
-  animation: `${animation} 1s linear infinite`
+  animation: `${animation} 1s linear infinite`,
 })
 ```
 

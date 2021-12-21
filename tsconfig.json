@@ -1,0 +1,10 @@
+{
+  "include": ["lib/index.ts", "lib/presets.ts"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "lib": ["ES5", "dom"],
+    "target": "ES5",
+    "declaration": true,
+    "declarationDir": "./dist"
+  }
+}

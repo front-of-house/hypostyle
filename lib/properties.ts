@@ -1,56 +1,68 @@
-const { px, str, percOrPx } = require('./utils')
+import { CSSPropertyMapping } from './'
 
-module.exports = {
+export function px(v: string | number) {
+  return typeof v === 'number' ? v + 'px' : v
+}
+
+export function str(v: string | number) {
+  return v + ''
+}
+
+export function percOrPx(v: string | number) {
+  return typeof v === 'number' ? (v <= 1 ? v * 100 + '%' : v + 'px') : v
+}
+
+export var properties: CSSPropertyMapping = {
   display: {},
   position: {},
   top: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   bottom: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   left: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   right: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   width: {
     token: 'width',
-    unit: percOrPx
+    unit: percOrPx,
   },
   minWidth: {
     token: 'width',
-    unit: percOrPx
+    unit: percOrPx,
   },
   maxWidth: {
     token: 'width',
-    unit: percOrPx
+    unit: percOrPx,
   },
   height: {
     token: 'height',
-    unit: percOrPx
+    unit: percOrPx,
   },
   minHeight: {
     token: 'height',
-    unit: percOrPx
+    unit: percOrPx,
   },
   maxHeight: {
     token: 'height',
-    unit: percOrPx
+    unit: percOrPx,
   },
   color: {
-    token: 'color'
+    token: 'color',
   },
   background: {
-    token: 'color'
+    token: 'color',
   },
   backgroundColor: {
-    token: 'color'
+    token: 'color',
   },
   backgroundImage: {},
   backgroundRepeat: {},
@@ -69,103 +81,103 @@ module.exports = {
   justifySelf: {},
   alignSelf: {},
   order: {
-    unit: str
+    unit: str,
   },
   margin: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   marginTop: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   marginBottom: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   marginLeft: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   marginRight: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   padding: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   paddingTop: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   paddingBottom: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   paddingLeft: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   paddingRight: {
     token: 'space',
-    unit: px
+    unit: px,
   },
   zIndex: {
     token: 'zIndex',
-    unit: str
+    unit: str,
   },
   fontSize: {
-    token: 'fontSize'
+    token: 'fontSize',
   },
   fontFamily: {
-    token: 'fontFamily'
+    token: 'fontFamily',
   },
   fontWeight: {
     token: 'fontWeight',
-    unit: str
+    unit: str,
   },
   lineHeight: {
-    token: 'lineHeight'
+    token: 'lineHeight',
   },
   letterSpacing: {
-    token: 'letterSpacing'
+    token: 'letterSpacing',
   },
   textAlign: {},
   overflow: {},
   boxShadow: {
-    token: 'boxShadow'
+    token: 'boxShadow',
   },
   border: {
-    token: 'border'
+    token: 'border',
   },
   borderColor: {
-    token: 'color'
+    token: 'color',
   },
   borderWidth: {
-    token: 'borderWidth'
+    token: 'borderWidth',
   },
   borderStyle: {
-    token: 'borderStyle'
+    token: 'borderStyle',
   },
   borderRadius: {
-    token: 'borderRadius'
+    token: 'borderRadius',
   },
   fill: {
-    token: 'color'
+    token: 'color',
   },
   stroke: {
-    token: 'color'
+    token: 'color',
   },
   transition: {
-    token: 'transition'
+    token: 'transition',
   },
   transitionProperty: {},
   transitionDuration: {
-    token: 'transitionDuration'
+    token: 'transitionDuration',
   },
   transitionTimingFunction: {
-    token: 'transitionTimingFunction'
+    token: 'transitionTimingFunction',
   },
-  transform: {}
+  transform: {},
 }

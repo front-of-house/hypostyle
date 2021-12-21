@@ -1,5 +1,5 @@
-const presets = require('../presets')
-const { hypostyle } = require('../')
+const presets = require('../dist/presets')
+const { hypostyle } = require('../dist')
 
 const hypo = hypostyle(presets)
 
@@ -8,7 +8,7 @@ let explode = 0
 let css = 0
 let total = 0
 
-function process ({ cx, ...rest }) {
+function process({ cx, ...rest }) {
   const t1 = Date.now()
   const cleaned = hypo.pick(rest)
   pick += Date.now() - t1
@@ -20,7 +20,7 @@ function process ({ cx, ...rest }) {
   const t3 = Date.now()
   hypo.style({
     ...cleaned.styles,
-    ...c
+    ...c,
   })
   css += Date.now() - t3
 }
@@ -34,12 +34,12 @@ for (let i = 0; i < 100000; i++) {
       d: 'block',
       f: true,
       aic: true,
-      bg: 'tomato'
+      bg: 'tomato',
     },
     className: 'foo',
     m: [i + 'px', 2],
     d: { 0: 'block', 1: 'flex' },
-    px: [1, 2, 3, 4, 5]
+    px: [1, 2, 3, 4, 5],
   })
 }
 total += Date.now() - t4
