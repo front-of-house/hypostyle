@@ -33,14 +33,14 @@ const { css } = hypostyle({
   breakpoints: ['400px', '800px', '1200px'],
   tokens: {
     color: {
-      primary: '#ff4567'
+      primary: '#ff4567',
     },
-    space: [0, 4, 8, 12, 16, 20, 24, 28, 32]
+    space: [0, 4, 8, 12, 16, 20, 24, 28, 32],
   },
   shorthands: {
     c: ['color'],
-    px: ['paddingLeft', 'paddingRight']
-  }
+    px: ['paddingLeft', 'paddingRight'],
+  },
 })
 ```
 
@@ -49,10 +49,10 @@ const { css } = hypostyle({
 ```javascript
 const classname = css({
   c: 'primary',
-  px: [4, 8]
+  px: [4, 8],
 })
 
-function Component () {
+function Component() {
   return <div className={classname} />
 }
 ```
@@ -113,7 +113,7 @@ remaining values are convered into `@media` breakpoints.
 
 ```javascript
 css({
-  d: ['block', 'none']
+  d: ['block', 'none'],
 })
 ```
 
@@ -135,7 +135,7 @@ can use object syntax. Just use the indices as object keys:
 
 ```javascript
 css({
-  d: { 1: 'none' }
+  d: { 1: 'none' },
 })
 ```
 
@@ -155,10 +155,10 @@ Tokens are either objects of named values, or arrays (scales) of values.
 const { css } = hypostyle({
   tokens: {
     color: {
-      primary: '#ff4557'
+      primary: '#ff4557',
     },
-    space: [0, 4, 8, 12, 16]
-  }
+    space: [0, 4, 8, 12, 16],
+  },
 })
 ```
 
@@ -173,13 +173,13 @@ CSS these properties. The rest of the above example could look like this:
 const { css } = hypostyle({
   tokens: {
     color: {
-      primary: '#ff4557'
+      primary: '#ff4557',
     },
-    space: [0, 4, 8, 12, 16]
+    space: [0, 4, 8, 12, 16],
   },
   shorthands: {
-    bg: 'background'
-  }
+    bg: 'background',
+  },
 })
 ```
 
@@ -198,8 +198,8 @@ style objects can use any shorthands or tokens you have configured.
 ```javascript
 const { css } = hypostyle({
   macros: {
-    cover: { top: 0, bottom: 0, left: 0, right: 0 }
-  }
+    cover: { top: 0, bottom: 0, left: 0, right: 0 },
+  },
 })
 
 css({ cover: true }) // => { top: 0, bottom: 0, ... }
@@ -227,10 +227,10 @@ const { css } = hypostyle({
     appearance: {
       link: {
         c: 'blue',
-        textDecoration: 'underline'
-      }
-    }
-  }
+        textDecoration: 'underline',
+      },
+    },
+  },
 })
 ```
 
@@ -248,11 +248,11 @@ css({ appearance: 'link' }) // => { color: 'blue', textDecoration: 'underline' }
 const link = css({
   color: 'black',
   '&:hover': {
-    color: 'blue'
+    color: 'blue',
   },
   '.icon': {
-    transform: 'translateX(5px)'
-  }
+    transform: 'translateX(5px)',
+  },
 })
 ```
 
@@ -269,8 +269,8 @@ const { injectGlobal } = hypostyle(presets)
 injectGlobal({
   'html, body': {
     c: '#333',
-    boxSizing: 'border-box'
-  }
+    boxSizing: 'border-box',
+  },
 })
 ```
 
@@ -283,15 +283,15 @@ const { keyframes } = hypostyle(presets)
 
 const animation = keyframes({
   '0%': {
-    opacity: 0
+    opacity: 0,
   },
   '100%': {
-    opacity: 1
-  }
+    opacity: 1,
+  },
 })
 
 css({
-  animation: `${animation} 1s linear infinite`
+  animation: `${animation} 1s linear infinite`,
 })
 ```
 

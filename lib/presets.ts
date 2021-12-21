@@ -1,25 +1,15 @@
-const breakpoints = ['400px', '800px', '1200px']
+import { Tokens, Shorthands, Macros } from '.'
 
-const tokens = {
+export var breakpoints: string[] = ['400px', '800px', '1200px']
+
+export var tokens: Tokens = {
   space: [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64],
   fontSize: ['3rem', '3rem', '2.2rem', '1.8rem', '1.4rem', '1rem', '0.875rem'],
-  fontWeight: [
-    '0',
-    '100',
-    '200',
-    '300',
-    '400',
-    '500',
-    '600',
-    '700',
-    '800',
-    '900',
-    '1000'
-  ],
-  lineHeight: [1.1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6]
+  fontWeight: ['0', '100', '200', '300', '400', '500', '600', '700', '800', '900', '1000'],
+  lineHeight: [1.1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6],
 }
 
-const shorthands = {
+export var shorthands: Shorthands = {
   d: 'display',
   w: 'width',
   h: 'height',
@@ -44,10 +34,10 @@ const shorthands = {
   ff: 'fontFamily',
   fw: 'fontWeight',
   lh: 'lineHeight',
-  ta: 'textAlign'
+  ta: 'textAlign',
 }
 
-const macros = {
+export var macros: Macros = {
   db: { display: 'block' },
   dib: { display: 'inline-block' },
   di: { display: 'inline' },
@@ -72,7 +62,7 @@ const macros = {
     top: 0,
     bottom: 0,
     left: 0,
-    right: 0
+    right: 0,
   },
   w: { width: 1 },
   h: { height: 1 },
@@ -81,12 +71,5 @@ const macros = {
   taj: { textAlign: 'justify' },
   ma: { m: 'auto' },
   mxa: { mx: 'auto' },
-  mya: { my: 'auto' }
-}
-
-module.exports = {
-  breakpoints,
-  tokens,
-  shorthands,
-  macros
+  mya: { my: 'auto' },
 }

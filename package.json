@@ -2,28 +2,18 @@
   "name": "hypostyle",
   "version": "0.0.0",
   "description": "Minimalist 5th Generation CSS-in-JS built for concision and extension. Fast af, powered by nano-css.",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "index.js",
-    "index.d.ts",
-    "presets.js",
-    "presets.d.ts",
-    "utils.js",
-    "utils.d.ts",
-    "properties.js"
+    "dist"
   ],
   "scripts": {
-    "test": "node -r esm test",
-    "test:watch": "nodemon -r esm test",
-    "format": "prettier-standard --format",
-    "lint": "prettier-standard --lint"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "prettier-standard --lint && prettier-standard --format --staged && npm run test",
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
-    }
+    "prepare": "is-ci || pnpx husky install",
+    "test": "c8 node -r esbuild-register lib/__tests__/index.ts",
+    "build": "node scripts/build && tsc --emitDeclarationOnly",
+    "typecheck": "tsc --noEmit",
+    "lint": "prettier --check .",
+    "format": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -36,23 +26,24 @@
   },
   "homepage": "https://github.com/sure-thing/hypostyle#readme",
   "devDependencies": {
+    "@commitlint/cli": "^15.0.0",
+    "@commitlint/config-conventional": "^15.0.0",
+    "@semantic-release/git": "^10.0.1",
     "baretest": "^2.0.0",
-    "commitizen": "^4.2.1",
-    "cz-conventional-changelog": "^3.3.0",
-    "esm": "^3.2.25",
-    "husky": "^4.2.5",
-    "nodemon": "^2.0.4",
-    "prettier-standard": "^16.4.1",
-    "semantic-release": "^17.2.1",
-    "typescript": "^4.1.3"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
+    "c8": "^7.10.0",
+    "commitlint": "^15.0.0",
+    "esbuild": "^0.14.7",
+    "esbuild-register": "^3.2.1",
+    "husky": "^7.0.4",
+    "is-ci": "^3.0.1",
+    "prettier": "^2.5.1",
+    "semantic-release": "^18.0.1",
+    "typescript": "^4.5.4",
+    "uvu": "^0.5.2"
   },
   "dependencies": {
-    "csstype": "^3.0.6",
+    "csstype": "^3.0.10",
+    "deep-extend": "^0.6.0",
     "nano-css": "^5.3.4"
   }
 }
