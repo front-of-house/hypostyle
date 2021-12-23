@@ -33,7 +33,7 @@ export type HypostyleObject =
     })
   | {
       // any hypostyle properties
-      [prop: string]: HypostyleObject | HypostyleValue
+      [prop: string]: HypostyleObject | HypostyleValue | any
     }
 
 export type HypostyleObjectOrFunction = ((theme: Theme) => HypostyleObject) | HypostyleObject
