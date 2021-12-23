@@ -1,3 +1,4 @@
+/* c8 ignore next */
 import { CSSPropertyMapping } from './'
 
 export function px(v: string | number) {
