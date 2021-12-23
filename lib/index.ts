@@ -76,6 +76,8 @@ export type Theme = {
   properties?: CSSPropertyMapping
 } & UserTheme
 
+export type Hypostyle = ReturnType<typeof hypostyle>
+
 function obj(o: HypostyleObjectOrFunction, theme: Theme): HypostyleObject {
   return typeof o === 'function' ? o(theme) : o
 }
