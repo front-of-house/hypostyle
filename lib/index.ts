@@ -8,6 +8,7 @@ import { addon as rule } from 'nano-css/addon/rule'
 import { addon as globalAddon } from 'nano-css/addon/global'
 import { addon as hydrate } from 'nano-css/addon/hydrate'
 
+import * as presets from './presets'
 import { properties as cssPropertyMapping } from './properties'
 
 type UnknownKeyValue = Record<string, unknown>
@@ -238,13 +239,13 @@ function createNano(options: { addons?: any[]; prefix?: string }) {
 }
 
 export function hypostyle(
-  theme: Theme,
+  theme?: Theme,
   config?: {
     addons?: any[]
     prefix?: string
   }
 ) {
-  theme = theme || {}
+  theme = theme || presets
   config = config || {}
 
   var t: Theme = merge(
