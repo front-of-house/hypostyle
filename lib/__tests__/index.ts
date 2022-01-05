@@ -495,6 +495,28 @@ test('prefix', () => {
   assert.equal(/hypo/.test(sheet), true)
 })
 
+test('createGlobal', () => {
+  const { createGlobal } = hypostyle(defaults)
+
+  const sheet = createGlobal({
+    '@media (min-width: 567px)': {
+      color: 'tomato',
+    },
+  })
+
+  assert.ok(/color:tomato/.test(sheet))
+})
+
+test('no theme, defaults to presets', () => {
+  const { createGlobal } = hypostyle()
+
+  const sheet = createGlobal({
+    c: 'tomato',
+  })
+
+  assert.ok(/color:tomato/.test(sheet))
+})
+
 /**
  * @see https://github.com/sure-thing/hypostyle/issues/7
  */

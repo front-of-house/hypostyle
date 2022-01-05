@@ -93,6 +93,7 @@ function explode(props: HypostyleObject, theme: Theme) {
 
   // expand macros and variants, copy other props
   for (var prop in props) {
+    /* c8 ignore next */
     if (!props.hasOwnProperty(prop)) continue // skip proto
 
     // macro exists AND prop is true
@@ -107,6 +108,7 @@ function explode(props: HypostyleObject, theme: Theme) {
 
   // recursively expand all shorthands
   for (var prop in styles) {
+    /* c8 ignore next */
     if (!styles.hasOwnProperty(prop)) continue // skip proto
 
     var value = styles[prop]
@@ -141,6 +143,7 @@ function style(props: HypostyleObject, theme: Theme): CssLikeObject {
   var styles = {}
 
   for (var prop in props) {
+    /* c8 ignore next */
     if (!props.hasOwnProperty(prop)) continue // skip proto
 
     var mixedObject: HypostyleObject | HypostyleValue = props[prop]
@@ -210,6 +213,7 @@ function pick<T>(props: HypostyleObject, theme: Theme): { styles: HypostyleObjec
   var extra = {}
 
   for (var prop in props) {
+    /* c8 ignore next */
     if (!props.hasOwnProperty(prop)) continue // skip proto
 
     if (theme.macros[prop] || theme.variants[prop] || theme.shorthands[prop] || theme.properties[prop]) {
@@ -228,6 +232,7 @@ function pick<T>(props: HypostyleObject, theme: Theme): { styles: HypostyleObjec
 function createNano(options: { addons?: any[]; prefix?: string }) {
   var nano = create({
     pfx: options.prefix || '_',
+    /* c8 ignore next 2 */
     // @ts-expect-error
     sh: typeof document === 'object' ? document.getElementById('hypo') : null,
   })
@@ -278,6 +283,11 @@ export function hypostyle(
     },
     pick: function <T = UnknownKeyValue>(props: HypostyleObject & UnknownKeyValue) {
       return pick<T>(props, t)
+    },
+    createGlobal: function (props: HypostyleObject) {
+      var n = createNano({ addons })
+      n.global(style(explode(obj(props, t), t), t))
+      return n.raw
     },
     injectGlobal: function (props: HypostyleObject) {
       nano.global(style(explode(obj(props, t), t), t))
