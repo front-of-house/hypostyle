@@ -5,6 +5,7 @@
     "lib": ["ES5", "dom"],
     "target": "ES5",
     "declaration": true,
-    "declarationDir": "./"
+    "declarationDir": "./",
+    "esModuleInterop": true
   }
 }

@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "csstype": "^3.0.10",
-    "deep-extend": "^0.6.0",
+    "deepmerge": "^4.2.2",
     "nano-css": "^5.3.4"
   }
 }

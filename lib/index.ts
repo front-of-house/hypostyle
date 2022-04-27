@@ -1,4 +1,4 @@
-import merge from 'deep-extend'
+import merge from 'deepmerge'
 import { Properties as CSSProperties, Pseudos as CSSPsuedos } from 'csstype'
 import { create, CssLikeObject } from 'nano-css'
 import { addon as cache } from 'nano-css/addon/cache'
@@ -98,9 +98,9 @@ function explode(props: HypostyleObject, theme: Theme) {
 
     // macro exists AND prop is true
     if (theme.macros[prop] && (props[prop] === true || props[prop] === false)) {
-      if (props[prop] === true) merge(styles, theme.macros[prop])
+      if (props[prop] === true) styles = merge(styles, theme.macros[prop])
     } else if (theme.variants[prop]) {
-      merge(styles, theme.variants[prop][props[prop] as string])
+      styles = merge(styles, theme.variants[prop][props[prop] as string])
     } else {
       styles[prop] = props[prop]
     }
@@ -168,7 +168,7 @@ function style(props: HypostyleObject, theme: Theme): CssLikeObject {
          */
         var nested = {}
         nested[prop] = style(mixedObject, theme)
-        merge(styles, nested)
+        styles = merge(styles, nested)
         continue // continue, nested style object
       }
     }
