@@ -272,6 +272,52 @@ test('breakpoints', () => {
   assert.equal(styles['@media (min-width: 800px)'].color, 'green')
 })
 
+test('breakpoints in correct cascading order', () => {
+  const { css, flush } = hypostyle({
+    breakpoints: ['400px', '800px'],
+    shorthands,
+  })
+
+  css({
+    pt: { 2: 6 },
+    pb: [2, 4, 6],
+  })
+
+  const sheet = flush()
+
+  assert.equal(
+    sheet,
+    `
+.__qxaokh {
+    padding-bottom:2px;
+}
+@media (min-width: 400px){
+.__qxaokh {
+    padding-bottom:4px;
+}
+}@media (min-width: 800px){
+.__qxaokh {
+    padding-top:6px;
+    padding-bottom:6px;
+}
+}`
+  )
+})
+
+test('breakpoints in other units', () => {
+  const { style } = hypostyle({
+    breakpoints: ['20em', '40em'],
+    shorthands,
+  })
+  const styles = style({
+    c: ['blue', 'red', 'green'],
+  })
+
+  assert.equal(styles.color, 'blue')
+  assert.equal(styles['@media (min-width: 20em)'].color, 'red')
+  assert.equal(styles['@media (min-width: 40em)'].color, 'green')
+})
+
 test('too many breakpoints', () => {
   const { style } = hypostyle({
     breakpoints: ['400px', '800px'],

@@ -141,6 +141,7 @@ function explode(props: HypostyleObject, theme: Theme) {
  */
 function style(props: HypostyleObject, theme: Theme): CssLikeObject {
   var styles = {}
+  var responsive = {}
 
   for (var prop in props) {
     /* c8 ignore next */
@@ -185,20 +186,36 @@ function style(props: HypostyleObject, theme: Theme): CssLikeObject {
       // drop undefined values, all others pass through
       if (unitValue === undefined) continue
 
-      var s = styles
+      var r = responsive
       var breakpoint = theme.breakpoints[o - 1]
 
       if (breakpoint) {
-        var media = `@media (min-width: ${breakpoint})`
-
         // drop down a level (into breakpoint)
-        s = styles[media] = styles[media] || {}
+        r = responsive[breakpoint] = responsive[breakpoint] || {}
+        r[prop] = unitValue
+      } else if (!breakpoint && o > 0) {
+        continue
+      } else {
+        styles[prop] = unitValue
       }
+    }
+  }
 
-      // if someone passes a breakpoint that doesn't exist
-      if (!breakpoint && o > 0) continue
+  var sorted = Object.keys(responsive)
+    .sort((a, b) => {
+      return parseInt(a) - parseInt(b)
+    })
+    .reduce((res, breakpoint) => {
+      res[`@media (min-width: ${breakpoint})`] = responsive[breakpoint]
+      return res
+    }, {})
+  var sortedKeys = Object.keys(sorted)
 
-      s[prop] = unitValue
+  for (var i = 0; i < sortedKeys.length; i++) {
+    var key = sortedKeys[i]
+    styles[key] = {
+      ...(styles[key] || {}),
+      ...sorted[key],
     }
   }
 
